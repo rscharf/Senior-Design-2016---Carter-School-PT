@@ -75,7 +75,7 @@ interrupt void WDT_interval_handler(){
 
 		unsigned char com_in_val;
 		com_in_val = (P1IN & COM_IN);
-		com_in_last = com_in_val;
+		//com_in_last = com_in_val;
 
 		if (com_in_val == 0)
 		{
