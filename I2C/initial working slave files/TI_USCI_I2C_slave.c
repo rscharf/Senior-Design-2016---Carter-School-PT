@@ -15,8 +15,8 @@
 //            |                 |
 //            |                 |
 //            |                 |
-//            |         SDA/P1.6|------->
-//            |         SCL/P1.7|------->
+//            |         SCL/P1.6|------->
+//            |         SDA/P1.7|------->
 //
 // Note: External pull-ups are needed for SDA & SCL
 //

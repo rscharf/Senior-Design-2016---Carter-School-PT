@@ -26,7 +26,7 @@ void main(void)
 {
   WDTCTL = WDTPW + WDTHOLD;                            // Stop WDT
   
-  TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, 0x50);// init the slave
+  TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, 0x07);// init the slave
   _EINT();
   BCSCTL1 = CALBC1_16MHZ; 
   DCOCTL = CALDCO_16MHZ;
