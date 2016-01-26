@@ -1,0 +1,27 @@
+#kivy 1.9.0
+
+<SendButton>:
+    size: 250, 100
+    #pos: center_x + width / 4, center_y - height / 4
+
+
+<PtWidg>:
+
+    Image:
+        center_x: root.width / 4
+        top: root.top - 150
+        source: 'SensoryWalkLogo.png'
+        height: dp(300)
+        width: dp(300)
+
+    SendButton:
+        center_x: root.width - root.width / 4
+        top: root.top - 100
+        text: 'Send minute to MSP430'
+        font_size: 18
+
+    Label:
+        center_x: root.width / 2
+        center_y: root.height - self.height / 2
+        text: 'Carter School Sensory Walk'
+        font_size: 40
