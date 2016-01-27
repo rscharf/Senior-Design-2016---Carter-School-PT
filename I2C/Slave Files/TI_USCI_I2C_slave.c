@@ -37,6 +37,8 @@
 void (*TI_receive_callback)(unsigned char receive);
 void (*TI_transmit_callback)(unsigned char volatile *send_next);
 void (*TI_start_callback)(void);
+unsigned char data_received = 0 ;
+
 
 //------------------------------------------------------------------------------
 // void TI_USCI_I2C_slaveinit(void (*SCallback)(),
@@ -64,9 +66,11 @@ void TI_USCI_I2C_slaveinit(void (*SCallback)(),
     UCB0CTL1 &= ~UCSWRST;                     // Clear SW reset, resume operation
     IE2 |= UCB0TXIE + UCB0RXIE;               // Enable TX interrupt
     UCB0I2CIE |= UCSTTIE;                     // Enable STT interrupt
-    TI_start_callback = SCallback;
+    TI_start_callback = SCallback;			  // Set callback functions
     TI_receive_callback = RCallback;
     TI_transmit_callback = TCallback;
+    P1DIR |= RED;                             // Set RED to output direction
+    P1OUT |= RED;							  // RED ON
 }
 
 
@@ -74,10 +78,13 @@ void TI_USCI_I2C_slaveinit(void (*SCallback)(),
 #pragma vector = USCIAB0TX_VECTOR
 __interrupt void USCIAB0TX_ISR(void)
 {
-  if (IFG2 & UCB0TXIFG)
+  if (IFG2 & UCB0TXIFG){
     TI_transmit_callback(&UCB0TXBUF);
+
+  }
   else
     TI_receive_callback(UCB0RXBUF);
+
 }
 
 // USCI_B0 State ISR

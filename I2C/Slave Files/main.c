@@ -26,7 +26,7 @@ void main(void)
 {
   WDTCTL = WDTPW + WDTHOLD;                            // Stop WDT
   
-  TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, 0x07);// init the slave
+  TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, 0x12);// init the slave
   _EINT();
   BCSCTL1 = CALBC1_16MHZ; 
   DCOCTL = CALDCO_16MHZ;
@@ -39,11 +39,16 @@ void start_cb(){
 
 void receive_cb(unsigned char receive){
   RXData = receive;
+  //data_received = UCB0RXBUF;
+     if (RXData == 4)
+     	P1OUT ^= RED; //Turn RED off if a certain value is received
+
+
     flag1++;
 }
 
 void transmit_cb(unsigned char volatile *byte){
-  *byte = TXData++;
+  *byte = UCB0I2COA; //Send slave's address to master
   flag++;
 }
 
