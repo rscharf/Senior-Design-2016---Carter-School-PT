@@ -5,6 +5,9 @@ ScreenManagement:
     SettingsScreen:
     StartUserRunScreen:
     ManageUserProfilesScreen:
+    InitialPanelConfigScreen:
+    AdjustVolumeScreen:
+    CreateProfileScreen:
 
 <HomeScreen>:
     name: 'home'
@@ -45,7 +48,7 @@ ScreenManagement:
             font_size: 20
             size_hint: .27, .12
             pos_hint: {'x': .63, 'y': .18}
-
+            on_press: exit()
 
 
 
@@ -60,10 +63,36 @@ ScreenManagement:
 
         Button:
             on_press: app.root.current = 'home'
-            text: 'Return to Home'
+            text: 'Return Home'
+            font_size: 17
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+
+        Button:
+            text: 'Adjust Brightness'
             font_size: 20
             size_hint: .27, .12
-            pos_hint: {'x': .73, 'y': 0}
+            pos_hint: {'x': .1, 'y': .63}
+
+        Button:
+            text: 'Adjust Volume'
+            font_size: 20
+            size_hint: .27, .12
+            pos_hint: {'x': .1, 'y': .48}
+            on_press: app.root.current = 'volume'
+
+        Button:
+            text: 'Panel Replacement'
+            font_size: 20
+            size_hint: .27, .12
+            pos_hint: {'x': .63, 'y': .63}
+
+        Button:
+            text: 'Initial Panel Configuration'
+            font_size: 17.5
+            size_hint: .27, .12
+            pos_hint: {'x': .63, 'y': .48}
+            on_press: app.root.current = 'initpanelconfig'
 
 <StartUserRunScreen>:
     name: 'startrun'
@@ -76,10 +105,10 @@ ScreenManagement:
 
         Button:
             on_press: app.root.current = 'home'
-            text: 'Return to Home'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .73, 'y': 0}
+            text: 'Return Home'
+            font_size: 17
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
 
 
 <ManageUserProfilesScreen>:
@@ -93,7 +122,68 @@ ScreenManagement:
 
         Button:
             on_press: app.root.current = 'home'
-            text: 'Return to Home'
+            text: 'Return Home'
+            font_size: 17
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+
+        Button:
+            text: 'Create New User Profile'
+            font_size: 30
+            size_hint: .5, .15
+            pos_hint: {'x': .25, 'y': .6}
+            on_press: app.root.current = 'createprofile'
+
+        Button:
+            text: 'Edit Existing User Profile'
+            font_size: 30
+            size_hint: .5, .15
+            pos_hint: {'x': .25, 'y': .4}
+
+        Button:
+            text: 'Delete User Profile'
+            font_size: 30
+            size_hint: .5, .15
+            pos_hint: {'x': .25, 'y': .2}
+
+<InitialPanelConfigScreen>:
+    name: 'initpanelconfig'
+
+    FloatLayout:
+        Label:
+            text: 'Initial Panel Configuration'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Cancel'
             font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .73, 'y': 0}
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press: app.root.current = 'settings'
+
+<AdjustVolumeScreen>:
+    name: 'volume'
+
+    FloatLayout:
+        Label:
+            text: 'Settings: Volume'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Return to Settings'
+            font_size: 17
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press: app.root.current = 'settings'
+
+<CreateProfileScreen>:
+    name: 'createprofile'
+
+    FloatLayout:
+        Label:
+            text: 'New Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
