@@ -160,7 +160,21 @@ ScreenManagement:
             font_size: 20
             size_hint: .189, .09
             pos_hint: {'x': .811, 'y': 0}
-            on_press: app.root.current = 'settings'
+            on_press:
+                app.root.current = 'settings'
+                root.cancelButton()
+
+        Button:
+            text: 'Panel Connected'
+            font_size: 28
+            size_hint: .3, .12
+            pos_hint: {'x': .35, 'y': .1}
+            on_press: root.panelConnected()
+
+        Label:
+            text: root.panel_connect
+            font_size: 32
+            pos_hint: {'x': 0, 'y': .04}
 
 <AdjustVolumeScreen>:
     name: 'volume'
@@ -187,3 +201,14 @@ ScreenManagement:
             font_size: 40
             pos_hint: {'x': 0, 'y': .4}
 
+        Button:
+            text: 'Create Profile'
+            font_size: 30
+            size_hint: .26, .12
+            pos_hint: {'x': .37, 'y': .03}
+
+        TextInput:
+            text: 'User Name'
+            size_hint: .2, .075
+            pos_hint: {'x': .4, 'y': .7}
+            multiline: False
