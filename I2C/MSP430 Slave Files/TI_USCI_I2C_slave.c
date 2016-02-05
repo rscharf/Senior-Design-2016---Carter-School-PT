@@ -95,3 +95,32 @@ __interrupt void USCIAB0RX_ISR(void)
   TI_start_callback();
   IFG2 &= ~UCB0RXIFG;		 // clear UCB0 RX flag
 }
+
+void eraseD(){ // erase information memory segment D
+	// assumes watchdog timer already disabled (which is necessary)
+	FCTL2 = FWKEY+FSSEL_2+23; // SMCLK source + divisor 24 (assuming 8Mhz clock)
+	FCTL3 = FWKEY; // unlock flash (except for segment A)
+	FCTL1 = FWKEY+ERASE; // setup to erase
+	*( (int *) 0x1000)  = 0; // dummy write to segment D word 0
+	/* since this code is in flash, there is no need to explicitly wait
+	 * for completion since the CPU is stopped while the flash controller
+	 * is erasing or writing
+	 */
+	FCTL1=FWKEY; // clear erase and write modes
+	FCTL3=FWKEY+LOCK; // relock the segment
+}
+
+void writeDword(char value, char *address){
+	// write a single word.
+	// NOTE: call only once for a given address between erases!
+	if ( (((unsigned int) address) >= 0x1000) &&
+	     (((unsigned int) address) <0x1040)  ){// inside infoD?
+		FCTL3 = FWKEY; // unlock flash (except for segment A)
+		FCTL1 = FWKEY + WRT ; // enable simple write
+		*address = value;	// actual write to memory
+		FCTL1 = FWKEY ;     // clear write mode
+		FCTL3 = FWKEY+LOCK; // relock the segment
+	     }
+}
+
+
