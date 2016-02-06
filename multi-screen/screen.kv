@@ -194,6 +194,9 @@ ScreenManagement:
 
 <CreateProfileScreen>:
     name: 'createprofile'
+    #ddbutt: langbutt
+    spinner: langspin
+    nameinput: textin
 
     FloatLayout:
         Label:
@@ -206,9 +209,36 @@ ScreenManagement:
             font_size: 30
             size_hint: .26, .12
             pos_hint: {'x': .37, 'y': .03}
+            on_press: root.createprofile()
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+                root.cancelProf()
 
         TextInput:
-            text: 'User Name'
-            size_hint: .2, .075
-            pos_hint: {'x': .4, 'y': .7}
+            id: textin
+            size_hint: .26, .075
+            pos_hint: {'x': .23, 'y': .71}
             multiline: False
+
+        Label:
+            text: 'User Name:'
+            font_size: 25
+            pos_hint: {'x': -.38, 'y': .25}
+
+        Label:
+            text: ' Language \nPreference:'
+            font_size: 23
+            pos_hint: {'x': -.38, 'y': 0}
+
+        Spinner:
+            id: langspin
+            text: 'Select Language'
+            values: ('English', 'Spanish', 'French', 'Cantonese')
+            size_hint: .26, .085
+            pos_hint: {'x': .23, 'y': .46}

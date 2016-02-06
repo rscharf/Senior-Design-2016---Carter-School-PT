@@ -2,7 +2,11 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ListProperty, ObjectProperty
+from kivy.uix.dropdown import DropDown
+from kivy.uix.button import Button
+from kivy.uix.spinner import Spinner
+
 
 class HomeScreen(Screen):
     pass
@@ -31,15 +35,22 @@ class InitialPanelConfigScreen(Screen):
             self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
 
     def cancelButton(self):
-        #app.root.current = 'settings'
         self.panelNo = 0
         self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
 
 class AdjustVolumeScreen(Screen):
     pass
 
+
 class CreateProfileScreen(Screen):
-    pass
+    spinner = ObjectProperty()
+    nameinput = ObjectProperty()
+    def createprofile(self):
+        print('Chosen language for user', self.nameinput.text, 'is', self.spinner.text)
+
+    def cancelProf(self):
+        self.nameinput.text = ''
+        self.spinner.text = 'Select Language'
 
 class ScreenManagement(ScreenManager):
     pass
