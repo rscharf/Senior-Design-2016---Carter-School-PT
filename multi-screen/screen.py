@@ -6,6 +6,7 @@ from kivy.properties import StringProperty, ListProperty, ObjectProperty
 from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
+from kivy.uix.slider import Slider
 
 
 class HomeScreen(Screen):
@@ -45,12 +46,19 @@ class AdjustVolumeScreen(Screen):
 class CreateProfileScreen(Screen):
     spinner = ObjectProperty()
     nameinput = ObjectProperty()
+    volslide = ObjectProperty()
+    brightslide = ObjectProperty()
+
     def createprofile(self):
         print('Chosen language for user', self.nameinput.text, 'is', self.spinner.text)
+        print('Volume set to', self.volslide.value)
+        print('Brightness set to', self.brightslide.value)
 
     def cancelProf(self):
         self.nameinput.text = ''
         self.spinner.text = 'Select Language'
+        self.volslide.value = 0
+        self.brightslide.value = 0
 
 class ScreenManagement(ScreenManager):
     pass
