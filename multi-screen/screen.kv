@@ -1,4 +1,5 @@
 #: import sm kivy.uix.screenmanager
+
 ScreenManagement:
     transition: sm.NoTransition()
     HomeScreen:
@@ -6,8 +7,8 @@ ScreenManagement:
     StartUserRunScreen:
     ManageUserProfilesScreen:
     InitialPanelConfigScreen:
-    AdjustVolumeScreen:
     CreateProfileScreen:
+    RunningScreen:
 
 <HomeScreen>:
     name: 'home'
@@ -69,29 +70,16 @@ ScreenManagement:
             pos_hint: {'x': .811, 'y': 0}
 
         Button:
-            text: 'Adjust Brightness'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .1, 'y': .63}
-
-        Button:
-            text: 'Adjust Volume'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .1, 'y': .48}
-            on_press: app.root.current = 'volume'
-
-        Button:
             text: 'Panel Replacement'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .63, 'y': .63}
+            font_size: 30
+            size_hint: .55, .2
+            pos_hint: {'x': .225, 'y': .52}
 
         Button:
             text: 'Initial Panel Configuration'
-            font_size: 17.5
-            size_hint: .27, .12
-            pos_hint: {'x': .63, 'y': .48}
+            font_size: 30
+            size_hint: .55, .2
+            pos_hint: {'x': .225, 'y': .27}
             on_press: app.root.current = 'initpanelconfig'
 
 <StartUserRunScreen>:
@@ -110,6 +98,12 @@ ScreenManagement:
             size_hint: .189, .09
             pos_hint: {'x': .811, 'y': 0}
 
+        Button:
+            text: 'Temp Start Run'
+            font_size: 20
+            size_hint: .27, .12
+            pos_hint: {'x': .365, 'y': .02}
+            on_press: app.root.current = 'running'
 
 <ManageUserProfilesScreen>:
     name: 'manageprofiles'
@@ -176,25 +170,9 @@ ScreenManagement:
             font_size: 32
             pos_hint: {'x': 0, 'y': .04}
 
-<AdjustVolumeScreen>:
-    name: 'volume'
-
-    FloatLayout:
-        Label:
-            text: 'Settings: Volume'
-            font_size: 40
-            pos_hint: {'x': 0, 'y': .4}
-
-        Button:
-            text: 'Return to Settings'
-            font_size: 17
-            size_hint: .189, .09
-            pos_hint: {'x': .811, 'y': 0}
-            on_press: app.root.current = 'settings'
 
 <CreateProfileScreen>:
     name: 'createprofile'
-    #ddbutt: langbutt
     spinner: langspin
     nameinput: textin
     volslide: vslide
@@ -272,3 +250,35 @@ ScreenManagement:
             text: 'Brightness:'
             font_size: 25
             pos_hint: {'x': .345, 'y': .25}
+
+<RunningScreen>:
+    name: 'running'
+    on_enter: root.startScreen()
+
+    FloatLayout:
+        Label:
+            text: 'John Doe'
+            font_size: 60
+            pos_hint: {'x': 0, 'y': .2}
+
+        Label:
+            id: ftmarkstr
+            font_size: 55
+            pos_hint: {'x': 0, 'y': -.05}
+            text: root.footMarkerStr
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'home'
+                root.cancelButt()
+
+
+        Button:
+            text: 'Finish Run'
+            font_size: 20
+            size_hint: .27, .12
+            pos_hint: {'x': .365, 'y': .02}

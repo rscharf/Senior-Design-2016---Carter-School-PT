@@ -1,0 +1,4 @@
+Sara Bareilles, English, 77.0, 39.0
+Shakira, Spanish, 90.0, 55.0
+Niels Bohr, Dutch, 45.0, 100.0
+Andrew Hong, Cantonese, 78.0, 34.0
