@@ -3,13 +3,29 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import StringProperty, ListProperty, ObjectProperty, NumericProperty
+from kivy.properties import StringProperty, ListProperty, ObjectProperty, NumericProperty, ReferenceListProperty
 from kivy.uix.dropdown import DropDown
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
 from kivy.uix.slider import Slider
 from kivy.clock import Clock
+from kivy.adapters.listadapter import ListAdapter
+from kivy.uix.listview import ListView, ListItemButton
+from kivy.metrics import dp
+
+def reload_dictionary(user_dict, userKey):
+    with open("profiles.txt") as f:
+        for line in f:
+            (name, lang, vol, bright) = line.split(',',4)
+            user_dict[name] = {'name': name, 'lang': lang, 'vol': float(vol), 'bright': float(bright)}
+            userKey.append(name)
+    f.close()
+    userKey = ListProperty(user_dict.keys())
+    #userKey.sort()
+
+class myListItemButton(ListItemButton):
+    pass
 
 
 class HomeScreen(Screen):
@@ -19,7 +35,34 @@ class SettingsScreen(Screen):
     pass
 
 class StartUserRunScreen(Screen):
-    pass
+    user_dict = {}
+    userKey = ListProperty()
+    users_list = ListView()
+    button_text = StringProperty()
+    sel_usr = StringProperty()
+    def __init__(self, **kwargs):
+        super(StartUserRunScreen, self).__init__(**kwargs)
+        self.button_text = 'Select User to Start Run'
+        self.sel_usr = 'No user selected'
+
+    def on_enter(self, *args):
+        del self.userKey[:]
+        self.user_dict.clear()
+        reload_dictionary(self.user_dict, self.userKey)
+        if self.userKey != None:
+            list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=True, cls=myListItemButton)
+        self.users_list.adapter = list_adapter
+        self.users_list.adapter.bind(on_selection_change=self.callback)
+
+    def callback(self, adapter):
+        if len(adapter.selection) == 0:
+            self.button_text = 'Select User to Start Run'
+            self.sel_usr = 'No user selected'
+            print "No selected item"
+        else:
+            print adapter.selection[0].text
+            self.sel_usr = adapter.selection[0].text
+            self.button_text = 'Start run for ' + adapter.selection[0].text
 
 class ManageUserProfilesScreen(Screen):
     pass
@@ -66,7 +109,7 @@ class CreateProfileScreen(Screen):
 class RunningScreen(Screen):
     footMarkerStr = StringProperty()
     footNum = NumericProperty()
-
+    user_name_text = StringProperty()
     def __init__(self, **kwargs):
         super(RunningScreen, self).__init__(**kwargs)
         self.footNum = 0

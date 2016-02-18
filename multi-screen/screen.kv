@@ -1,14 +1,23 @@
 #: import sm kivy.uix.screenmanager
 
+
+<myListItemButton>:
+    size: 400, 60
+    font_size: 25
+
+
 ScreenManagement:
     transition: sm.NoTransition()
     HomeScreen:
     SettingsScreen:
     StartUserRunScreen:
+        id: startrun
+
     ManageUserProfilesScreen:
     InitialPanelConfigScreen:
     CreateProfileScreen:
     RunningScreen:
+        user_name_text: startrun.sel_usr
 
 <HomeScreen>:
     name: 'home'
@@ -82,8 +91,10 @@ ScreenManagement:
             pos_hint: {'x': .225, 'y': .27}
             on_press: app.root.current = 'initpanelconfig'
 
+
 <StartUserRunScreen>:
     name: 'startrun'
+    users_list: users
 
     FloatLayout:
         Label:
@@ -99,11 +110,17 @@ ScreenManagement:
             pos_hint: {'x': .811, 'y': 0}
 
         Button:
-            text: 'Temp Start Run'
+            text: root.button_text
             font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .365, 'y': .02}
+            size_hint: .36, .12
+            pos_hint: {'center_x': .5, 'y': .02}
             on_press: app.root.current = 'running'
+
+        ListView:
+            id: users
+            allow_empty_selection: True
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
 
 <ManageUserProfilesScreen>:
     name: 'manageprofiles'
@@ -255,9 +272,10 @@ ScreenManagement:
     name: 'running'
     on_enter: root.startScreen()
 
+
     FloatLayout:
         Label:
-            text: 'John Doe'
+            text: root.user_name_text
             font_size: 60
             pos_hint: {'x': 0, 'y': .2}
 

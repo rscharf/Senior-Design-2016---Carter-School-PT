@@ -1,4 +1,12 @@
-Sara Bareilles, English, 77.0, 39.0
-Shakira, Spanish, 90.0, 55.0
-Niels Bohr, Dutch, 45.0, 100.0
-Andrew Hong, Cantonese, 78.0, 34.0
+Sara Bareilles,English,77.0,39.0
+Shakira,Spanish,90.0,55.0
+Niels Bohr,Dutch,45.0,100.0
+Andrew Hong,Cantonese,78.0,34.0
+Nick Memme,Mandarin,36.0,100.0
+Anna Lamp,French,100.0,52.0
+Mike Jones,English,47.0,70.0
+Charlie Darwin,Haitian Creole,38.0,60.0
+Dean D'Agati,Spanish,32.0,90.0
+Thomas Landry, Dutch, 45.0, 76.0
+Sarah Shofar, Spanish, 78.0, 58.0
+Tiana Johnson, English, 57.0, 58.0
