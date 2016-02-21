@@ -4,7 +4,8 @@
 <myListItemButton>:
     size: 400, 60
     font_size: 25
-
+    deselected_color: 1.875, 1.506, .2902, 2 #239,192,37,1
+    selected_color: 1.788, .13332, .8236, 2 #228,17,105,1
 
 ScreenManagement:
     transition: sm.NoTransition()
@@ -12,12 +13,16 @@ ScreenManagement:
     SettingsScreen:
     StartUserRunScreen:
         id: startrun
-
     ManageUserProfilesScreen:
     InitialPanelConfigScreen:
     CreateProfileScreen:
     RunningScreen:
         user_name_text: startrun.sel_usr
+    EditProfileScreen:
+    DeleteProfileScreen:
+        id: deleteprofile
+    ConfirmDeleteScreen:
+        usr_to_del: deleteprofile.sel_usr
 
 <HomeScreen>:
     name: 'home'
@@ -112,7 +117,7 @@ ScreenManagement:
         Button:
             text: root.button_text
             font_size: 20
-            size_hint: .36, .12
+            size_hint: .5, .12
             pos_hint: {'center_x': .5, 'y': .02}
             on_press: app.root.current = 'running'
 
@@ -150,12 +155,14 @@ ScreenManagement:
             font_size: 30
             size_hint: .5, .15
             pos_hint: {'x': .25, 'y': .4}
+            on_press: app.root.current = 'editprofile'
 
         Button:
             text: 'Delete User Profile'
             font_size: 30
             size_hint: .5, .15
             pos_hint: {'x': .25, 'y': .2}
+            on_press: app.root.current = 'deleteprofile'
 
 <InitialPanelConfigScreen>:
     name: 'initpanelconfig'
@@ -294,9 +301,90 @@ ScreenManagement:
                 app.root.current = 'home'
                 root.cancelButt()
 
-
         Button:
             text: 'Finish Run'
             font_size: 20
             size_hint: .27, .12
             pos_hint: {'x': .365, 'y': .02}
+
+<EditProfileScreen>:
+    name: 'editprofile'
+    users_list: users
+
+    FloatLayout:
+        Label:
+            text: 'Edit Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+
+        ListView:
+            id: users
+            allow_empty_selection: True
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+
+<DeleteProfileScreen>:
+    name: 'deleteprofile'
+    users_list: users
+
+    FloatLayout:
+        Label:
+            text: 'Delete Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+
+        ListView:
+            id: users
+            allow_empty_selection: True
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+
+        Button:
+            text: 'Delete'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: root.changeScreen()
+            #app.root.current = 'confirmdelete'
+
+<ConfirmDeleteScreen>:
+    name: 'confirmdelete'
+
+    FloatLayout:
+        Label:
+            text: 'Are you sure you wish to delete'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .35}
+
+        Label:
+            text: root.usr_to_del + '?'
+            font_size: 48
+            pos_hint: {'x': 0, 'y': 0}
+
+        Button:
+            text: 'Yes'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .25, 'y': .1}
+
+        Button:
+            text: 'No'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .75, 'y': .1}

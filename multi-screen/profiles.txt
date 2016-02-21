@@ -8,5 +8,9 @@ Mike Jones,English,47.0,70.0
 Charlie Darwin,Haitian Creole,38.0,60.0
 Dean D'Agati,Spanish,32.0,90.0
 Thomas Landry, Dutch, 45.0, 76.0
-Sarah Shofar, Spanish, 78.0, 58.0
-Tiana Johnson, English, 57.0, 58.0
+Erin O'Neil, English, 62.0, 76.0
+Rebecca Russo, English, 67.0, 50.0
+Kayla Tutino, English, 84.0, 64.0
+Brian Durocher, English, 45.0, 70.0
+Jack Parker, Spanish, 62.0, 82.0
+Marie-Philip Poulin, French, 65.0, 71.0

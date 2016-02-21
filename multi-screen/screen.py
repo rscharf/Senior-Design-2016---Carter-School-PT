@@ -12,7 +12,6 @@ from kivy.uix.slider import Slider
 from kivy.clock import Clock
 from kivy.adapters.listadapter import ListAdapter
 from kivy.uix.listview import ListView, ListItemButton
-from kivy.metrics import dp
 
 def reload_dictionary(user_dict, userKey):
     with open("profiles.txt") as f:
@@ -22,7 +21,7 @@ def reload_dictionary(user_dict, userKey):
             userKey.append(name)
     f.close()
     userKey = ListProperty(user_dict.keys())
-    #userKey.sort()
+
 
 class myListItemButton(ListItemButton):
     pass
@@ -46,6 +45,9 @@ class StartUserRunScreen(Screen):
         self.sel_usr = 'No user selected'
 
     def on_enter(self, *args):
+        print('on enter called for start user run screen')
+        self.button_text = 'Select User to Start Run'
+        self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
         reload_dictionary(self.user_dict, self.userKey)
@@ -53,6 +55,7 @@ class StartUserRunScreen(Screen):
             list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=True, cls=myListItemButton)
         self.users_list.adapter = list_adapter
         self.users_list.adapter.bind(on_selection_change=self.callback)
+        self.users_list._trigger_reset_populate()
 
     def callback(self, adapter):
         if len(adapter.selection) == 0:
@@ -84,6 +87,55 @@ class InitialPanelConfigScreen(Screen):
     def cancelButton(self):
         self.panelNo = 0
         self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
+
+class EditProfileScreen(Screen):
+    pass
+
+class DeleteProfileScreen(Screen):
+    user_dict = {}
+    userKey = ListProperty()
+    users_list = ListView()
+    button_text = StringProperty()
+    sel_usr = StringProperty()
+    isUserSelected = None
+    def __init__(self, **kwargs):
+        super(DeleteProfileScreen, self).__init__(**kwargs)
+        self.button_text = 'Select User to Start Run'
+        self.sel_usr = 'No user selected'
+
+    def on_enter(self, *args):
+        print('on_enter called for delete profile screen')
+        self.button_text = 'Select User to Start Run'
+        self.sel_usr = 'No user selected'
+        del self.userKey[:]
+        self.user_dict.clear()
+        reload_dictionary(self.user_dict, self.userKey)
+        if self.userKey != None:
+            list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=True, cls=myListItemButton)
+        self.users_list.adapter = list_adapter
+        self.users_list.adapter.bind(on_selection_change=self.callback)
+        self.users_list._trigger_reset_populate()
+
+    def callback(self, adapter):
+        if len(adapter.selection) == 0:
+            self.button_text = 'Select User to Start Run'
+            self.sel_usr = 'No user selected'
+            self.isUserSelected = False
+            print "No selected item"
+        else:
+            print adapter.selection[0].text
+            self.sel_usr = adapter.selection[0].text
+            self.button_text = 'Start run for ' + adapter.selection[0].text
+            self.isUserSelected = True
+
+    def changeScreen(self):
+        if self.isUserSelected == True:
+            #app.root.current = 'confirmdelete'
+            pass
+
+class ConfirmDeleteScreen(Screen):
+    usr_to_del = StringProperty()
+
 
 class CreateProfileScreen(Screen):
     spinner = ObjectProperty()
