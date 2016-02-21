@@ -95,23 +95,21 @@ class DeleteProfileScreen(Screen):
     user_dict = {}
     userKey = ListProperty()
     users_list = ListView()
-    button_text = StringProperty()
     sel_usr = StringProperty()
     isUserSelected = None
     def __init__(self, **kwargs):
         super(DeleteProfileScreen, self).__init__(**kwargs)
-        self.button_text = 'Select User to Start Run'
         self.sel_usr = 'No user selected'
 
     def on_enter(self, *args):
         print('on_enter called for delete profile screen')
-        self.button_text = 'Select User to Start Run'
-        self.sel_usr = 'No user selected'
+        #self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
         reload_dictionary(self.user_dict, self.userKey)
         if self.userKey != None:
-            list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=True, cls=myListItemButton)
+            list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=False, cls=myListItemButton)
+        self.sel_usr = self.userKey[0]
         self.users_list.adapter = list_adapter
         self.users_list.adapter.bind(on_selection_change=self.callback)
         self.users_list._trigger_reset_populate()
@@ -128,14 +126,21 @@ class DeleteProfileScreen(Screen):
             self.button_text = 'Start run for ' + adapter.selection[0].text
             self.isUserSelected = True
 
-    def changeScreen(self):
-        if self.isUserSelected == True:
-            #app.root.current = 'confirmdelete'
-            pass
-
 class ConfirmDeleteScreen(Screen):
     usr_to_del = StringProperty()
 
+    def deleteUser(self):
+        f = open("profiles.txt", "r")
+        lines = f.readlines()
+        f.close()
+        f = open("profiles.txt", "w")
+        for line in lines:
+            if not self.usr_to_del in line:
+                f.write(line)
+        f.close()
+
+class ProfileDeletedScreen(Screen):
+    usr_del = StringProperty()
 
 class CreateProfileScreen(Screen):
     spinner = ObjectProperty()

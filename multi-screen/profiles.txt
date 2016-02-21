@@ -6,7 +6,6 @@ Nick Memme,Mandarin,36.0,100.0
 Anna Lamp,French,100.0,52.0
 Mike Jones,English,47.0,70.0
 Charlie Darwin,Haitian Creole,38.0,60.0
-Dean D'Agati,Spanish,32.0,90.0
 Thomas Landry, Dutch, 45.0, 76.0
 Erin O'Neil, English, 62.0, 76.0
 Rebecca Russo, English, 67.0, 50.0

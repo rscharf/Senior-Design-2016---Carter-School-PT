@@ -23,6 +23,8 @@ ScreenManagement:
         id: deleteprofile
     ConfirmDeleteScreen:
         usr_to_del: deleteprofile.sel_usr
+    ProfileDeletedScreen:
+        usr_del: deleteprofile.sel_usr
 
 <HomeScreen>:
     name: 'home'
@@ -360,8 +362,8 @@ ScreenManagement:
             font_size: 28
             size_hint: .15, .12
             pos_hint: {'center_x': .5, 'y': .02}
-            on_press: root.changeScreen()
-            #app.root.current = 'confirmdelete'
+            on_press:
+                app.root.current = 'confirmdelete'
 
 <ConfirmDeleteScreen>:
     name: 'confirmdelete'
@@ -382,9 +384,39 @@ ScreenManagement:
             font_size: 28
             size_hint: .15, .12
             pos_hint: {'center_x': .25, 'y': .1}
+            on_press:
+                app.root.current = 'profiledeleted'
+                root.deleteUser()
 
         Button:
             text: 'No'
             font_size: 28
             size_hint: .15, .12
             pos_hint: {'center_x': .75, 'y': .1}
+            on_press: app.root.current = 'deleteprofile'
+
+<ProfileDeletedScreen>:
+    name: 'profiledeleted'
+
+    FloatLayout:
+        Label:
+            text: 'Profile for'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': .26}
+
+        Label:
+            text: root.usr_del
+            font_size: 45
+            pos_hint: {'center_x': .5, 'y': .1}
+
+        Label:
+            text: 'has been deleted'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': -.06}
+
+        Button:
+            text: 'Return Home'
+            font_size: 25
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'home'
