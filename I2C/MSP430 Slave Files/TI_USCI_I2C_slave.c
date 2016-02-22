@@ -69,8 +69,7 @@ void TI_USCI_I2C_slaveinit(void (*SCallback)(),
     TI_start_callback = SCallback;			  // Set callback functions
     TI_receive_callback = RCallback;
     TI_transmit_callback = TCallback;
-    P1DIR |= RED;                             // Set RED to output direction
-    P1OUT |= RED;							  // RED ON
+
 }
 
 
@@ -95,6 +94,9 @@ __interrupt void USCIAB0RX_ISR(void)
   TI_start_callback();
   IFG2 &= ~UCB0RXIFG;		 // clear UCB0 RX flag
 }
+
+
+
 
 void eraseD(){ // erase information memory segment D
 	// assumes watchdog timer already disabled (which is necessary)
@@ -121,6 +123,45 @@ void writeDword(char value, char *address){
 		FCTL1 = FWKEY ;     // clear write mode
 		FCTL3 = FWKEY+LOCK; // relock the segment
 	     }
+}
+
+//Function to reset panel address in flash mem to broadcast address
+void resetAddress(char value, char *address){
+	writeDword(value, address);
+}
+void init_wdt(){
+	// setup the watchdog timer as an interval timer
+ 	WDTCTL =(WDTPW +		// (bits 15-8) password
+    	                   	// bit 7=0 => watchdog timer on
+      	                 	// bit 6=0 => NMI on rising edge (not used here)
+                       	// bit 5=0 => RST/NMI pin does a reset (not used here)
+          	 WDTTMSEL +     // (bit 4) select interval timer mode
+ 		     WDTCNTCL  		// (bit 3) clear watchdog timer counter
+ 		                	// bit 2=0 => SMCLK is the source
+ 		                	// bits 1-0 = 00 => source/32K
+			 );
+    IE1 |= WDTIE;			// enable the WDT interrupt (in the system interrupt register IE1)
+}
+
+// =======ADC Initialization and Interrupt Handler========
+
+
+
+// Initialization of the ADC
+void init_adc(){
+  ADC10CTL1= ADC_INCH	//input channel 4
+ 			  +SHS_0 //use ADC10SC bit to trigger sampling
+ 			  +ADC10DIV_4 // ADC10 clock/5
+ 			  +ADC10SSEL_0 // Clock Source=ADC10OSC
+ 			  +CONSEQ_0; // single channel, single conversion
+ 			  ;
+  ADC10AE0=ADC_INPUT_BIT_MASK; // enable A4 analog input
+  ADC10CTL0= SREF_0	//reference voltages are Vss and Vcc
+ 	          +ADC10SHT_3 //64 ADC10 Clocks for sample and hold time (slowest)
+ 	          +ADC10ON	//turn on ADC10
+ 	          +ENC		//enable (but not yet start) conversions
+ 	          +ADC10IE  //enable interrupts
+ 	          ;
 }
 
 
