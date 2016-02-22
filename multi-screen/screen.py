@@ -89,14 +89,76 @@ class InitialPanelConfigScreen(Screen):
         self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
 
 class EditProfileScreen(Screen):
-    pass
+    user_dict = {}
+    userKey = ListProperty()
+    users_list = ListView()
+    sel_usr = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(EditProfileScreen, self).__init__(**kwargs)
+        self.sel_usr = 'No user selected'
+
+    def on_enter(self, *args):
+        print('on_enter called for edit profile screen')
+        #self.sel_usr = 'No user selected'
+        del self.userKey[:]
+        self.user_dict.clear()
+        reload_dictionary(self.user_dict, self.userKey)
+        if self.userKey != None:
+            list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=False, cls=myListItemButton)
+        self.sel_usr = self.userKey[0]
+        self.users_list.adapter = list_adapter
+        self.users_list.adapter.bind(on_selection_change=self.callback)
+        self.users_list._trigger_reset_populate()
+
+    def callback(self, adapter):
+        if len(adapter.selection) == 0:
+            self.sel_usr = 'No user selected'
+            print "No selected item"
+        else:
+            print adapter.selection[0].text
+            self.sel_usr = adapter.selection[0].text
+
+class ProfileEditingScreen(Screen):
+    usr_to_edit = StringProperty()
+    user_dict = {}
+    userKey = ListProperty()
+    edit_lang = StringProperty()
+    edit_vol = NumericProperty()
+    edit_bright = NumericProperty()
+
+    spinner = ObjectProperty()
+    nameinput = ObjectProperty()
+    volslide = ObjectProperty()
+    brightslide = ObjectProperty()
+    def on_enter(self, *args):
+        reload_dictionary(self.user_dict, self.userKey)
+        self.edit_lang = self.user_dict[self.usr_to_edit]['lang']
+        self.edit_bright = self.user_dict[self.usr_to_edit]['bright']
+        self.edit_vol = self.user_dict[self.usr_to_edit]['vol']
+
+    def edit_profile(self):
+        f = open("profiles.txt", "r")
+        lines = f.readlines()
+        f.close()
+        f = open("profiles.txt", "w")
+        for line in lines:
+            if not self.usr_to_edit in line:
+                f.write(line)
+            if self.usr_to_edit in line:
+                f.write(str(self.nameinput.text) + "," + str(self.spinner.text) + "," + str(self.volslide.value) + "," + str(self.brightslide.value) + "\n")
+        f.close()
+
+
+class ConfirmEditScreen(Screen):
+    usr_edit = StringProperty()
 
 class DeleteProfileScreen(Screen):
     user_dict = {}
     userKey = ListProperty()
     users_list = ListView()
     sel_usr = StringProperty()
-    isUserSelected = None
+
     def __init__(self, **kwargs):
         super(DeleteProfileScreen, self).__init__(**kwargs)
         self.sel_usr = 'No user selected'
@@ -116,15 +178,11 @@ class DeleteProfileScreen(Screen):
 
     def callback(self, adapter):
         if len(adapter.selection) == 0:
-            self.button_text = 'Select User to Start Run'
             self.sel_usr = 'No user selected'
-            self.isUserSelected = False
             print "No selected item"
         else:
             print adapter.selection[0].text
             self.sel_usr = adapter.selection[0].text
-            self.button_text = 'Start run for ' + adapter.selection[0].text
-            self.isUserSelected = True
 
 class ConfirmDeleteScreen(Screen):
     usr_to_del = StringProperty()
@@ -147,14 +205,15 @@ class CreateProfileScreen(Screen):
     nameinput = ObjectProperty()
     volslide = ObjectProperty()
     brightslide = ObjectProperty()
-
+    sel_usr = StringProperty()
     def createprofile(self):
         print('Chosen language for user ' + str(self.nameinput.text) + ' is ' + str(self.spinner.text))
         print('Volume set to ' + str(self.volslide.value))
         print('Brightness set to ' + str(self.brightslide.value))
+        self.sel_usr = str(self.nameinput.text)
 
         f = open("profiles.txt", "a")
-        f.write(str(self.nameinput.text) + ", " + str(self.spinner.text) + ", " + str(self.volslide.value) + ", " + str(self.brightslide.value) + "\n")
+        f.write(str(self.nameinput.text) + "," + str(self.spinner.text) + "," + str(self.volslide.value) + "," + str(self.brightslide.value) + "\n")
         f.close()
 
     def cancelProf(self):
@@ -162,6 +221,9 @@ class CreateProfileScreen(Screen):
         self.spinner.text = 'Select Language'
         self.volslide.value = 0
         self.brightslide.value = 0
+
+class ConfirmCreateProfileScreen(Screen):
+    usr_create = StringProperty()
 
 class RunningScreen(Screen):
     footMarkerStr = StringProperty()
