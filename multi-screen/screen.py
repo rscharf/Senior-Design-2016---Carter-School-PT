@@ -206,15 +206,30 @@ class CreateProfileScreen(Screen):
     volslide = ObjectProperty()
     brightslide = ObjectProperty()
     sel_usr = StringProperty()
-    def createprofile(self):
-        print('Chosen language for user ' + str(self.nameinput.text) + ' is ' + str(self.spinner.text))
-        print('Volume set to ' + str(self.volslide.value))
-        print('Brightness set to ' + str(self.brightslide.value))
-        self.sel_usr = str(self.nameinput.text)
+    yesnocr = StringProperty()
+    user_dict = {}
+    userKey = ListProperty()
 
-        f = open("profiles.txt", "a")
-        f.write(str(self.nameinput.text) + "," + str(self.spinner.text) + "," + str(self.volslide.value) + "," + str(self.brightslide.value) + "\n")
-        f.close()
+    def on_enter(self, *args):
+        print('on_enter called for create profile screen')
+        del self.userKey[:]
+        self.user_dict.clear()
+        reload_dictionary(self.user_dict, self.userKey)
+
+    def createprofile(self):
+        if str(self.nameinput.text) in self.userKey:
+            print('Profile for user ' + str(self.nameinput.text) + ' already exists')
+            self.yesnocr = 'already exists'
+            self.sel_usr = str(self.nameinput.text)
+        else:
+            print('Chosen language for user ' + str(self.nameinput.text) + ' is ' + str(self.spinner.text))
+            print('Volume set to ' + str(self.volslide.value))
+            print('Brightness set to ' + str(self.brightslide.value))
+            self.sel_usr = str(self.nameinput.text)
+            self.yesnocr = 'has been created'
+            f = open("profiles.txt", "a")
+            f.write(str(self.nameinput.text) + "," + str(self.spinner.text) + "," + str(self.volslide.value) + "," + str(self.brightslide.value) + "\n")
+            f.close()
 
     def cancelProf(self):
         self.nameinput.text = ''
@@ -224,6 +239,10 @@ class CreateProfileScreen(Screen):
 
 class ConfirmCreateProfileScreen(Screen):
     usr_create = StringProperty()
+    yncreate = StringProperty()
+
+class PanelReplacementScreen(Screen):
+    panelToRep = ObjectProperty()
 
 class RunningScreen(Screen):
     footMarkerStr = StringProperty()

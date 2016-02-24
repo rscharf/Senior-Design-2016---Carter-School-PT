@@ -33,6 +33,8 @@ ScreenManagement:
         usr_edit: editprofile.sel_usr
     ConfirmCreateProfileScreen:
         usr_create: createprofile.sel_usr
+        yncreate: createprofile.yesnocr
+    PanelReplacementScreen:
 
 <HomeScreen>:
     name: 'home'
@@ -50,29 +52,29 @@ ScreenManagement:
         Button:
             on_press: app.root.current = 'settings'
             text: 'Settings'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .63, 'y': .33}
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .30}
 
         Button:
             on_press: app.root.current = 'startrun'
             text: 'Start User Run'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .63, 'y': .63}
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .62}
 
         Button:
             on_press: app.root.current = 'manageprofiles'
             text: 'Manage User Profiles'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .63, 'y': .48}
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .46}
 
         Button:
             text: 'Exit'
-            font_size: 20
-            size_hint: .27, .12
-            pos_hint: {'x': .63, 'y': .18}
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .14}
             on_press: exit()
 
 
@@ -89,7 +91,7 @@ ScreenManagement:
         Button:
             on_press: app.root.current = 'home'
             text: 'Return Home'
-            font_size: 17
+            font_size: 20
             size_hint: .189, .09
             pos_hint: {'x': .811, 'y': 0}
 
@@ -98,6 +100,7 @@ ScreenManagement:
             font_size: 30
             size_hint: .55, .2
             pos_hint: {'x': .225, 'y': .52}
+            on_press: app.root.current = 'panelreplacement'
 
         Button:
             text: 'Initial Panel Configuration'
@@ -149,7 +152,7 @@ ScreenManagement:
         Button:
             on_press: app.root.current = 'home'
             text: 'Return Home'
-            font_size: 17
+            font_size: 20
             size_hint: .189, .09
             pos_hint: {'x': .811, 'y': 0}
 
@@ -184,7 +187,7 @@ ScreenManagement:
             pos_hint: {'x': 0, 'y': .4}
 
         Button:
-            text: 'Cancel'
+            text: 'Settings'
             font_size: 20
             size_hint: .189, .09
             pos_hint: {'x': .811, 'y': 0}
@@ -226,6 +229,7 @@ ScreenManagement:
             on_press:
                 root.createprofile()
                 app.root.current = 'confirmcreateprofile'
+                root.cancelProf()
 
         Button:
             text: 'Cancel'
@@ -313,7 +317,7 @@ ScreenManagement:
             pos_hint: {'center_x': .5, 'y': .1}
 
         Label:
-            text: 'has been created'
+            text: root.yncreate
             font_size: 35
             pos_hint: {'center_x': .5, 'y': -.06}
 
@@ -596,3 +600,49 @@ ScreenManagement:
             size_hint: .25, .12
             pos_hint: {'center_x': .5, 'y': .02}
             on_press: app.root.current = 'home'
+
+<PanelReplacementScreen>:
+    name: 'panelreplacement'
+    #panelToRep: textinp
+
+
+    FloatLayout:
+        Label:
+            text: 'Panel Replacement'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Settings'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'settings'
+
+       # TextInput:
+       #     id: textinp
+       #     size_hint: .1, .15
+       #     pos_hint: {'center_x': .5, 'center_y': .6}
+       #     multiline: False
+       #     font_size: 50
+
+        Label:
+            text: 'Select Panel to Replace:'
+            pos_hint: {'x': -.1, 'y': .05}
+            font_size: 30
+
+        Spinner:
+            id: panelspin
+            text: '#'
+            values: ('0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20')
+            size_hint: .09, .12
+            pos_hint: {'center_x': .7, 'center_y': .55}
+            font_size: 40
+
+        Button:
+            text: 'Panel Connected'
+            font_size: 28
+            size_hint: .3, .12
+            pos_hint: {'x': .35, 'y': .1}
+            #on_press: root.panelConnected()
