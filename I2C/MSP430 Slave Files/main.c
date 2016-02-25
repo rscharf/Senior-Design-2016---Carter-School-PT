@@ -51,7 +51,7 @@ volatile const char assigned_address = 0x7f;
 void main(void)
 {
   //WDTCTL = WDTPW + WDTHOLD;                            // Stop WDT
-  TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, assigned_address); // init the slave
+TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, assigned_address); // init the slave
   _EINT();
   BCSCTL1 = CALBC1_16MHZ; 
   DCOCTL = CALDCO_16MHZ; //16 MHz calibration for clock
@@ -87,24 +87,25 @@ void receive_cb(unsigned char receive){
 	  byte_num = 0;
   }
 
- // if (receive == 0x01) //Just for debugging purposes
-	//  P1OUT ^= RED; //Turn RED off if a certain value is received
-
   if (byte_num == 0) //if data has just been received
   {
    switch(state) // Save new address to flash memory
    {
    	   case 0: //idle state
+   		   P1OUT &= ~RED; //turn off on board LED?
+   		   P1OUT &= ~BJT_OUT; //turn off BJT LEDs
    		   break;
    	   case 1: // setting new address
    		   eraseD(); //Erase Data in D
    		   writeDword(receive, (char *) &assigned_address);//SET NEW ADDRESS in flash mem
    		   UCB0I2COA = assigned_address; // Set slave address register to address stored in flash mem
-
    		   break;
    	   case 2: //panel active and listening for sensor trigger
    		   break; //data received doesn't matter
-   	   case 3: //panel has been triggered, lights on
+   	   case 3: //idle state with lights activated - turn on LEDs
+   		   P1OUT |= BJT_OUT; //Turn on BJT LEDs
+   		   P1OUT |= RED; //Turn on on-board LED
+   		   sensor_flag = 0;
    		   break;
    	   case 4:
    		   break; //data received doesn't matter
@@ -121,28 +122,26 @@ void transmit_cb(unsigned char volatile *byte){
 	   {
 	   	   case 0: //idle state
 	   		   *byte = 0;
+	   		   P1OUT &= ~BJT_OUT; //Turn off BJT LEDs
+	   		   P1OUT &= ~RED; //Turn off on-board LED
 	   		   break;
 	   	   case 1: // setting new address
 	   		   *byte = assigned_address; //Send slave's address to master (retreived from flash mem)
-	   		   state = 0; //reset to Idle state
+	   		   state = 0; //reset to Idle state after new address is sent to master
 	   		   break;
 	   	   case 2: //panel active and listening for sensor trigger
-	   		   *byte = sensor_flag; //Pass 0 if flag hasn't been triggered. pass 1 if flag has been triggered
-	   		   break; //data received doesn't matter
-	   	   case 3:
-	   		   *byte = 1;
-	   		   break; //idle state with lights on, no action in transmit/receive necessary
-	   	   case 4:
-	   		   if ((sensor_flag == 1) || (button_flag == 1)){
-	   			*byte = 1;
-	   			sensor_flag = 0;
-	   			button_flag = 0;
-	   			state = 3;
+	   		   if ((sensor_flag == 1))
+	   		   {
+    			*byte = 1;
+    			sensor_flag = 0;
+    			button_flag = 0;
+	   			//state = 3; //Dont enter state 3 until told by RPI..later
 	   		   }
 	   		   else *byte = 0;
-	   		   //
-	   		   //}
-	   		   //else *byte = 0; //Pass 0 if button hasn't been pressed, pass 1 if it has been pressed
+	   		   break; //data received doesn't matter
+	   	   case 3: //idle state with lights activated, no action in transmit necessary
+	   		   *byte = 0;
+	   		   break;
 	   	   default:
 	   		   *byte = 0;
 	   		   break;
@@ -162,18 +161,21 @@ void transmit_cb(unsigned char volatile *byte){
 // ===== Watchdog Timer Interrupt Handler =====
 interrupt void WDT_interval_handler(){
 
-	 	 if (state == 4) {
-						ADC10CTL0 |= ADC10SC;  // trigger a conversion
 
+{
+						ADC10CTL0 |= ADC10SC;  // trigger a conversion
+						//Reset button. Should this only be accessible from state 2/3?
 						//button handling - for now this button acts as a sensor+
 						unsigned char b;
 						b= (P1IN & BUTTON);  // read the BUTTON bit
 						if (last_button && (b==0))
 						{ // has the button bit gone from high to low
-						  //turn off LEDs and reset COM_OUT to low
-							P1OUT ^= RED;
-							//P1OUT &= ~BJT_OUT;
+						  //turn off LEDs and go back to idle state
+							//P1OUT ^= RED;
+							P1OUT &= ~RED; //turn off on board LED?
+							P1OUT &= ~BJT_OUT; //turn off BJT LEDs
 							button_flag = 1;
+							state = 0;
 						}
 						last_button=b;    // remember button reading for next time.
 
@@ -186,13 +188,10 @@ interrupt void WDT_interval_handler(){
 						adc_average = adc_average_add/5;
 						adc_average_add = 0;
 
-						if ((adc_average > IR_THRESHOLD))
+						if ((adc_average > IR_THRESHOLD) && (state == 2))
 						{
 							//P1OUT |= RED;
-							P1OUT |= BJT_OUT;
-							P1OUT &= ~RED;
-
-							sensor_flag = 1;
+							sensor_flag = 1; //indicate sensor trigger
 						}
 
 						if (adc_vals_before_ave == 5)
