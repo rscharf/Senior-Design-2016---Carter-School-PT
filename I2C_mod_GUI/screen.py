@@ -143,6 +143,7 @@ class EditProfileScreen(Screen):
 
 class ProfileEditingScreen(Screen):
     usr_to_edit = StringProperty()
+    string_pass = StringProperty()
     user_dict = {}
     userKey = ListProperty()
     edit_lang = StringProperty()
@@ -170,6 +171,7 @@ class ProfileEditingScreen(Screen):
             if self.usr_to_edit in line:
                 f.write(str(self.nameinput.text) + "," + str(self.spinner.text) + "," + str(self.volslide.value) + "," + str(self.brightslide.value) + "\n")
         f.close()
+        self.string_pass = str(self.nameinput.text)
 
 
 class ConfirmEditScreen(Screen):
