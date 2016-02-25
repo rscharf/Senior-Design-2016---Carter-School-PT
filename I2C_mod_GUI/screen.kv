@@ -1,0 +1,652 @@
+#: import sm kivy.uix.screenmanager
+
+
+<myListItemButton>:
+    size: 400, 60
+    font_size: 25
+    deselected_color: 1.875, 1.506, .2902, 2 #239,192,37,1
+    selected_color: 1.788, .13332, .8236, 2 #228,17,105,1
+
+ScreenManagement:
+    transition: sm.NoTransition()
+    HomeScreen:
+    SettingsScreen:
+    StartUserRunScreen:
+        id: startrun
+    ManageUserProfilesScreen:
+    InitialPanelConfigScreen:
+    CreateProfileScreen:
+        id: createprofile
+    RunningScreen:
+        user_name_text: startrun.sel_usr
+    EditProfileScreen:
+        id: editprofile
+    DeleteProfileScreen:
+        id: deleteprofile
+    ConfirmDeleteScreen:
+        usr_to_del: deleteprofile.sel_usr
+    ProfileDeletedScreen:
+        usr_del: deleteprofile.sel_usr
+    ProfileEditingScreen:
+        usr_to_edit: editprofile.sel_usr
+    ConfirmEditScreen:
+        usr_edit: editprofile.sel_usr
+    ConfirmCreateProfileScreen:
+        usr_create: createprofile.sel_usr
+        yncreate: createprofile.yesnocr
+    PanelReplacementScreen:
+
+<HomeScreen>:
+    name: 'home'
+    FloatLayout:
+        Label:
+            text: 'Carter School Sensory Walk'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Image:
+            source: 'SensoryWalkLogo.png'
+            size_hint: .68, .68
+            pos_hint: {'x': -.045, 'y': .09}
+
+        Button:
+            on_press: app.root.current = 'settings'
+            text: 'Settings'
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .30}
+
+        Button:
+            on_press: app.root.current = 'startrun'
+            text: 'Start User Run'
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .62}
+
+        Button:
+            on_press: app.root.current = 'manageprofiles'
+            text: 'Manage User Profiles'
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .46}
+
+        Button:
+            text: 'Exit'
+            font_size: 24
+            size_hint: .33, .15
+            pos_hint: {'x': .6, 'y': .14}
+            on_press: exit()
+
+
+
+<SettingsScreen>:
+    name: 'settings'
+
+    FloatLayout:
+        Label:
+            text: 'Settings'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            on_press: app.root.current = 'home'
+            text: 'Return Home'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+
+        Button:
+            text: 'Panel Replacement'
+            font_size: 30
+            size_hint: .55, .2
+            pos_hint: {'x': .225, 'y': .52}
+            on_press: app.root.current = 'panelreplacement'
+
+        Button:
+            text: 'Initial Panel Configuration'
+            font_size: 30
+            size_hint: .55, .2
+            pos_hint: {'x': .225, 'y': .27}
+            on_press: app.root.current = 'initpanelconfig'
+
+
+<StartUserRunScreen>:
+    name: 'startrun'
+    users_list: users
+
+    FloatLayout:
+        Label:
+            text: 'Select User'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            on_press: app.root.current = 'home'
+            text: 'Return Home'
+            font_size: 17
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+
+        Button:
+            text: root.button_text
+            font_size: 20
+            size_hint: .5, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'running'
+
+        ListView:
+            id: users
+            allow_empty_selection: True
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+
+<ManageUserProfilesScreen>:
+    name: 'manageprofiles'
+
+    FloatLayout:
+        Label:
+            text: 'Manage User Profiles'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            on_press: app.root.current = 'home'
+            text: 'Return Home'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+
+        Button:
+            text: 'Create New User Profile'
+            font_size: 30
+            size_hint: .5, .15
+            pos_hint: {'x': .25, 'y': .6}
+            on_press: app.root.current = 'createprofile'
+
+        Button:
+            text: 'Edit Existing User Profile'
+            font_size: 30
+            size_hint: .5, .15
+            pos_hint: {'x': .25, 'y': .4}
+            on_press: app.root.current = 'editprofile'
+
+        Button:
+            text: 'Delete User Profile'
+            font_size: 30
+            size_hint: .5, .15
+            pos_hint: {'x': .25, 'y': .2}
+            on_press: app.root.current = 'deleteprofile'
+
+<InitialPanelConfigScreen>:
+    name: 'initpanelconfig'
+
+    FloatLayout:
+        Label:
+            text: 'Initial Panel Configuration'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Settings'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'settings'
+                root.cancelButton()
+
+        Button:
+            text: 'Panel Connected'
+            font_size: 28
+            size_hint: .3, .12
+            pos_hint: {'x': .35, 'y': .1}
+            on_press: root.panelConnected()
+
+        Label:
+            text: root.panel_connect
+            font_size: 32
+            pos_hint: {'x': 0, 'y': .04}
+
+
+<CreateProfileScreen>:
+    name: 'createprofile'
+    spinner: langspin
+    nameinput: textin
+    volslide: vslide
+    brightslide: bslide
+
+    FloatLayout:
+        Label:
+            text: 'New Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Create Profile'
+            font_size: 30
+            size_hint: .26, .12
+            pos_hint: {'x': .37, 'y': .03}
+            on_press:
+                root.createprofile()
+                app.root.current = 'confirmcreateprofile'
+                root.cancelProf()
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+                root.cancelProf()
+
+        TextInput:
+            id: textin
+            size_hint: .26, .075
+            pos_hint: {'x': .23, 'y': .58}
+            multiline: False
+
+        Label:
+            text: 'User Name:'
+            font_size: 25
+            pos_hint: {'x': -.38, 'y': .12}
+
+        Label:
+            text: ' Language \nPreference:'
+            font_size: 23
+            pos_hint: {'x': -.38, 'y': -.13}
+
+        Spinner:
+            id: langspin
+            text: 'Select Language'
+            values: ('English', 'Spanish', 'French', 'Cantonese', 'Dutch', 'Mandarin', 'Haitian Creole')
+            size_hint: .26, .085
+            pos_hint: {'x': .23, 'y': .33}
+
+        Slider:
+            id: vslide
+            orientation: 'vertical'
+            min: 0
+            max: 100
+            pos_hint: {'x': .6, 'y': .3}
+            size_hint: .1, .43
+            step: 1
+
+        Label:
+            text: 'Volume:'
+            font_size: 25
+            pos_hint: {'x': .145, 'y': .25}
+
+        Label:
+            text: str(vslide.value)
+            font_size: 22
+            pos_hint: {'x': .15, 'y': -.25}
+
+
+        Slider:
+            id: bslide
+            orientation: 'vertical'
+            min: 0
+            max: 100
+            pos_hint: {'x': .8, 'y': .3}
+            size_hint: .1, .43
+            step: 1
+
+        Label:
+            text: 'Brightness:'
+            font_size: 25
+            pos_hint: {'x': .345, 'y': .25}
+
+        Label:
+            text: str(bslide.value)
+            font_size: 22
+            pos_hint: {'x': .35, 'y': -.25}
+
+<ConfirmCreateProfileScreen>:
+    name: 'confirmcreateprofile'
+
+    FloatLayout:
+        Label:
+            text: 'Profile for'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': .26}
+
+        Label:
+            text: root.usr_create
+            font_size: 45
+            pos_hint: {'center_x': .5, 'y': .1}
+
+        Label:
+            text: root.yncreate
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': -.06}
+
+        Button:
+            text: 'Return Home'
+            font_size: 25
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'home'
+
+<RunningScreen>:
+    name: 'running'
+    on_enter: root.startScreen()
+
+
+    FloatLayout:
+        Label:
+            text: root.user_name_text
+            font_size: 60
+            pos_hint: {'x': 0, 'y': .2}
+
+        Label:
+            id: ftmarkstr
+            font_size: 55
+            pos_hint: {'x': 0, 'y': -.05}
+            text: root.footMarkerStr
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'home'
+                root.cancelButt()
+
+        Button:
+            text: 'Finish Run'
+            font_size: 20
+            size_hint: .27, .12
+            pos_hint: {'x': .365, 'y': .02}
+            on_press:
+                root.finishRun()
+                root.cancelButt()
+                app.root.current = 'home'
+
+<EditProfileScreen>:
+    name: 'editprofile'
+    users_list: users
+
+    FloatLayout:
+        Label:
+            text: 'Edit Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+
+        ListView:
+            id: users
+            allow_empty_selection: True
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+
+        Button:
+            text: 'Edit'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press:
+                app.root.current = 'editing'
+
+<ProfileEditingScreen>:
+    name: 'editing'
+    spinner: langspin
+    nameinput: textin
+    volslide: vslide
+    brightslide: bslide
+
+    FloatLayout:
+        Label:
+            text: 'Edit Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Edit Profile'
+            font_size: 30
+            size_hint: .26, .12
+            pos_hint: {'x': .37, 'y': .03}
+            on_press:
+                app.root.current = 'confirmedit'
+                root.edit_profile()
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+
+        TextInput:
+            id: textin
+            text: root.usr_to_edit
+            size_hint: .26, .075
+            pos_hint: {'x': .23, 'y': .58}
+            multiline: False
+
+        Label:
+            text: 'User Name:'
+            font_size: 25
+            pos_hint: {'x': -.38, 'y': .12}
+
+        Label:
+            text: ' Language \nPreference:'
+            font_size: 23
+            pos_hint: {'x': -.38, 'y': -.13}
+
+        Spinner:
+            id: langspin
+            text: root.edit_lang
+            values: ('English', 'Spanish', 'French', 'Cantonese', 'Dutch', 'Mandarin', 'Haitian Creole')
+            size_hint: .26, .085
+            pos_hint: {'x': .23, 'y': .33}
+
+        Slider:
+            id: vslide
+            orientation: 'vertical'
+            value: root.edit_vol
+            min: 0
+            max: 100
+            pos_hint: {'x': .6, 'y': .3}
+            size_hint: .1, .43
+            step: 1
+
+        Label:
+            text: 'Volume:'
+            font_size: 25
+            pos_hint: {'x': .145, 'y': .25}
+
+        Label:
+            text: str(vslide.value)
+            font_size: 22
+            pos_hint: {'x': .15, 'y': -.25}
+
+
+        Slider:
+            id: bslide
+            orientation: 'vertical'
+            value: root.edit_bright
+            min: 0
+            max: 100
+            pos_hint: {'x': .8, 'y': .3}
+            size_hint: .1, .43
+            step: 1
+
+        Label:
+            text: 'Brightness:'
+            font_size: 25
+            pos_hint: {'x': .345, 'y': .25}
+
+        Label:
+            text: str(bslide.value)
+            font_size: 22
+            pos_hint: {'x': .35, 'y': -.25}
+
+<ConfirmEditScreen>:
+    name: 'confirmedit'
+
+    FloatLayout:
+        Label:
+            text: 'Profile for'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': .26}
+
+        Label:
+            text: root.usr_edit
+            font_size: 45
+            pos_hint: {'center_x': .5, 'y': .1}
+
+        Label:
+            text: 'has been edited'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': -.06}
+
+        Button:
+            text: 'Return Home'
+            font_size: 25
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'home'
+
+<DeleteProfileScreen>:
+    name: 'deleteprofile'
+    users_list: users
+
+    FloatLayout:
+        Label:
+            text: 'Delete Profile'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Cancel'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'manageprofiles'
+
+        ListView:
+            id: users
+            allow_empty_selection: True
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+
+        Button:
+            text: 'Delete'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press:
+                app.root.current = 'confirmdelete'
+
+<ConfirmDeleteScreen>:
+    name: 'confirmdelete'
+
+    FloatLayout:
+        Label:
+            text: 'Are you sure you wish to delete'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .35}
+
+        Label:
+            text: root.usr_to_del + '?'
+            font_size: 48
+            pos_hint: {'x': 0, 'y': 0}
+
+        Button:
+            text: 'Yes'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .25, 'y': .1}
+            on_press:
+                app.root.current = 'profiledeleted'
+                root.deleteUser()
+
+        Button:
+            text: 'No'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .75, 'y': .1}
+            on_press: app.root.current = 'deleteprofile'
+
+<ProfileDeletedScreen>:
+    name: 'profiledeleted'
+
+    FloatLayout:
+        Label:
+            text: 'Profile for'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': .26}
+
+        Label:
+            text: root.usr_del
+            font_size: 45
+            pos_hint: {'center_x': .5, 'y': .1}
+
+        Label:
+            text: 'has been deleted'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': -.06}
+
+        Button:
+            text: 'Return Home'
+            font_size: 25
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'home'
+
+<PanelReplacementScreen>:
+    name: 'panelreplacement'
+    #panelToRep: textinp
+
+
+    FloatLayout:
+        Label:
+            text: 'Panel Replacement'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Settings'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'settings'
+
+       # TextInput:
+       #     id: textinp
+       #     size_hint: .1, .15
+       #     pos_hint: {'center_x': .5, 'center_y': .6}
+       #     multiline: False
+       #     font_size: 50
+
+        Label:
+            text: 'Select Panel to Replace:'
+            pos_hint: {'x': -.1, 'y': .05}
+            font_size: 30
+
+        Spinner:
+            id: panelspin
+            text: '#'
+            values: ('0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20')
+            size_hint: .09, .12
+            pos_hint: {'center_x': .7, 'center_y': .55}
+            font_size: 40
+
+        Button:
+            text: 'Panel Connected'
+            font_size: 28
+            size_hint: .3, .12
+            pos_hint: {'x': .35, 'y': .1}
+            #on_press: root.panelConnected()

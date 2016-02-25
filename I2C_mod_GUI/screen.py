@@ -284,6 +284,13 @@ class RunningScreen(Screen):
         else:
             self.footMarkerStr = str(self.footNum) + ' feet'
 
+    def finishRun(self):
+        for num in range(self.current_panel-1, -1, -1):
+            bus.write_byte_data(new_addr[num], DEVICE_REG_MODE1, 0)
+            bus.write_byte_data(new_addr[num], DEVICE_REG_MODE1, 0)
+        self.current_panel = 0
+
+
     def on_enter(self, *args):
         self.sent_active_panel = False
         self.footNum = 0
@@ -304,7 +311,7 @@ class RunningScreen(Screen):
        
         if self.sent_active_panel == False:
             try:
-                bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 4) #change back to 2 for final state
+                bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 2) #change back to 2 for final state
                 bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 0) #temp, delete later
 
                 self.sent_active_panel = True
@@ -317,15 +324,21 @@ class RunningScreen(Screen):
                 #time.sleep(0.01)
                 result = bus.read_byte(new_addr[self.current_panel])
                 if result == 1:
+                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 3)
+                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 0)
                     print ("RESULT IS 1!!!!")
                     self.sent_active_panel = False
                     self.current_panel += 1
                     print ("current_panel incremented")
                     if self.current_panel == 1:
                         os.system('mpg123 startuserrun.mp3 &')
+                    #need to add here some kind of statement eventually that says it can only go to panel 20
                     if self.current_panel > 1:
                         self.footNum += 1
-                        os.system('mpg123 one.mp3 &')
+                        if self.current_panel == 2:
+                            os.system('mpg123 one.mp3 &')
+                        if self.current_panel == 3:
+                            os.system('mpg123 two.mp3 &')
                         print ("current_panel is > 1")
                         if (self.footNum == 1):
                             self.footMarkerStr = str(self.footNum) + ' foot'
