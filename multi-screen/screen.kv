@@ -35,6 +35,8 @@ ScreenManagement:
         usr_create: createprofile.sel_usr
         yncreate: createprofile.yesnocr
     PanelReplacementScreen:
+    FinishRunScreen:
+    DataSavedScreen:
 
 <HomeScreen>:
     name: 'home'
@@ -359,6 +361,9 @@ ScreenManagement:
             font_size: 20
             size_hint: .27, .12
             pos_hint: {'x': .365, 'y': .02}
+            on_press:
+                app.root.current = 'finishrun'
+                root.cancelButt()
 
 <EditProfileScreen>:
     name: 'editprofile'
@@ -646,3 +651,44 @@ ScreenManagement:
             size_hint: .3, .12
             pos_hint: {'x': .35, 'y': .1}
             #on_press: root.panelConnected()
+
+<FinishRunScreen>:
+    name: 'finishrun'
+
+    FloatLayout:
+    Label:
+        text: 'Would you like to save run data?'
+        font_size: 40
+        pos_hint: {'x': 0, 'y': .1}
+
+    Button:
+        text: 'Yes'
+        font_size: 28
+        size_hint: .15, .12
+        pos_hint: {'center_x': .25, 'y': .1}
+        on_press:
+            app.root.current = 'datasaved'
+
+
+    Button:
+        text: 'No'
+        font_size: 28
+        size_hint: .15, .12
+        pos_hint: {'center_x': .75, 'y': .1}
+        on_press: app.root.current = 'home'
+
+<DataSavedScreen>:
+    name: 'datasaved'
+
+    FloatLayout:
+        Label:
+            text: 'Data has been saved'
+            font_size: 40
+            pos_hint: {'center_x': .5, 'y': .1}
+
+        Button:
+            text: 'Return Home'
+            font_size: 25
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'home'

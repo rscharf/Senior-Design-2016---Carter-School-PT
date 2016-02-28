@@ -244,6 +244,12 @@ class ConfirmCreateProfileScreen(Screen):
 class PanelReplacementScreen(Screen):
     panelToRep = ObjectProperty()
 
+class FinishRunScreen(Screen):
+    pass
+
+class DataSavedScreen(Screen):
+    pass
+
 class RunningScreen(Screen):
     footMarkerStr = StringProperty()
     footNum = NumericProperty()
