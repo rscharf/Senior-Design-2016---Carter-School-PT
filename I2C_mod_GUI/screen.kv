@@ -36,6 +36,8 @@ ScreenManagement:
         usr_create: createprofile.sel_usr
         yncreate: createprofile.yesnocr
     PanelReplacementScreen:
+    FinishRunScreen:
+    DataSavedScreen:
 
 <HomeScreen>:
     name: 'home'
@@ -363,7 +365,7 @@ ScreenManagement:
             on_press:
                 root.finishRun()
                 root.cancelButt()
-                app.root.current = 'home'
+                app.root.current = 'finishrun'
 
 <EditProfileScreen>:
     name: 'editprofile'
@@ -608,8 +610,6 @@ ScreenManagement:
 
 <PanelReplacementScreen>:
     name: 'panelreplacement'
-    #panelToRep: textinp
-
 
     FloatLayout:
         Label:
@@ -624,13 +624,6 @@ ScreenManagement:
             pos_hint: {'x': .811, 'y': 0}
             on_press:
                 app.root.current = 'settings'
-
-       # TextInput:
-       #     id: textinp
-       #     size_hint: .1, .15
-       #     pos_hint: {'center_x': .5, 'center_y': .6}
-       #     multiline: False
-       #     font_size: 50
 
         Label:
             text: 'Select Panel to Replace:'
@@ -651,3 +644,43 @@ ScreenManagement:
             size_hint: .3, .12
             pos_hint: {'x': .35, 'y': .1}
             #on_press: root.panelConnected()
+
+<FinishRunScreen>:
+    name: 'finishrun'
+
+    FloatLayout:
+        Label:
+            text: 'Would you like to save run data?'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .1}
+
+        Button:
+            text: 'Yes'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .25, 'y': .1}
+            on_press:
+                app.root.current = 'datasaved'
+
+        Button:
+            text: 'No'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .75, 'y': .1}
+            on_press: app.root.current = 'home'
+
+<DataSavedScreen>:
+    name: 'datasaved'
+
+    FloatLayout:
+        Label:
+            text: 'Data has been saved'
+            font_size: 40
+            pos_hint: {'center_x': .5, 'y': .1}
+
+        Button:
+            text: 'Return Home'
+            font_size: 25
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .02}
+            on_press: app.root.current = 'home'
