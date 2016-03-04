@@ -21,14 +21,15 @@ BROADCAST_ADDR = 0x7F
 DEVICE_REG_MODE1 = 0X00
 new_addr = [0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24]
 
-def reload_dictionary(user_dict, userKey):
+def reload_dictionary(user_dict):
     with open("profiles.txt") as f:
         for line in f:
             (name, lang, vol, bright) = line.split(',',4)
             user_dict[name] = {'name': name, 'lang': lang, 'vol': float(vol), 'bright': float(bright)}
-            userKey.append(name)
     f.close()
-    userKey = ListProperty(user_dict.keys())
+    temp = user_dict.keys()
+    sorts = sorted(temp)
+    return sorts
 
 
 class myListItemButton(ListItemButton):
@@ -58,7 +59,7 @@ class StartUserRunScreen(Screen):
         self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
-        reload_dictionary(self.user_dict, self.userKey)
+        self.userKey = reload_dictionary(self.user_dict)
         if self.userKey != None:
             list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=True, cls=myListItemButton)
         self.users_list.adapter = list_adapter
@@ -125,7 +126,7 @@ class EditProfileScreen(Screen):
         #self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
-        reload_dictionary(self.user_dict, self.userKey)
+        self.userKey = reload_dictionary(self.user_dict)
         if self.userKey != None:
             list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=False, cls=myListItemButton)
         self.sel_usr = self.userKey[0]
@@ -155,7 +156,7 @@ class ProfileEditingScreen(Screen):
     volslide = ObjectProperty()
     brightslide = ObjectProperty()
     def on_enter(self, *args):
-        reload_dictionary(self.user_dict, self.userKey)
+        self.userKey = reload_dictionary(self.user_dict)
         self.edit_lang = self.user_dict[self.usr_to_edit]['lang']
         self.edit_bright = self.user_dict[self.usr_to_edit]['bright']
         self.edit_vol = self.user_dict[self.usr_to_edit]['vol']
@@ -192,7 +193,7 @@ class DeleteProfileScreen(Screen):
         #self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
-        reload_dictionary(self.user_dict, self.userKey)
+        self.userKey = reload_dictionary(self.user_dict)
         if self.userKey != None:
             list_adapter = ListAdapter(data=self.userKey, selection_mode='single', allow_empty_selection=False, cls=myListItemButton)
         self.sel_usr = self.userKey[0]
@@ -238,7 +239,7 @@ class CreateProfileScreen(Screen):
         print('on_enter called for create profile screen')
         del self.userKey[:]
         self.user_dict.clear()
-        reload_dictionary(self.user_dict, self.userKey)
+        self.userKey = reload_dictionary(self.user_dict)
 
     def createprofile(self):
         if str(self.nameinput.text) in self.userKey:
