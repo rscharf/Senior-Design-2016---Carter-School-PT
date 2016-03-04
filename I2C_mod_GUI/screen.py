@@ -268,6 +268,27 @@ class ConfirmCreateProfileScreen(Screen):
 
 class PanelReplacementScreen(Screen):
     panelToRep = ObjectProperty()
+    result_string = StringProperty()
+    spinner = ObjectProperty()
+
+    def panelConnected(self):
+        #python I2C code goes here to send actual address
+        #send MSP430 state var then send new address
+        self.panelToRep = int(self.spinner.text)
+        bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, 1)
+        bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelToRep])
+            
+        time.sleep(1)
+
+        #read new address back from MSP430
+        backAddr = bus.read_byte(new_addr[self.panelToRep])
+            
+        if (backAddr == new_addr[self.panelToRep]):
+            #update label for GUI
+            self.result_string = 'Panel Succesfully Connected'
+        else:
+            #display error with what was received
+            self.result_string = 'Error'
 
 class FinishRunScreen(Screen):
     pass

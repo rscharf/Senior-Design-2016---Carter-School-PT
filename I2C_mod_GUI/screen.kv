@@ -610,6 +610,7 @@ ScreenManagement:
 
 <PanelReplacementScreen>:
     name: 'panelreplacement'
+    spinner: panelspin
 
     FloatLayout:
         Label:
@@ -643,7 +644,12 @@ ScreenManagement:
             font_size: 28
             size_hint: .3, .12
             pos_hint: {'x': .35, 'y': .1}
-            #on_press: root.panelConnected()
+            on_press: root.panelConnected()
+
+        Label:
+            font_size: 32
+            pos_hint: {'center_x': .5, 'y': -.25}
+            text: root.result_string
 
 <FinishRunScreen>:
     name: 'finishrun'
