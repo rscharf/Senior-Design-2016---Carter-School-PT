@@ -37,6 +37,7 @@ ScreenManagement:
         yncreate: createprofile.yesnocr
     PanelReplacementScreen:
     FinishRunScreen:
+        user_save: startrun.sel_usr
     DataSavedScreen:
 
 <HomeScreen>:
@@ -666,6 +667,7 @@ ScreenManagement:
             size_hint: .15, .12
             pos_hint: {'center_x': .25, 'y': .1}
             on_press:
+                root.saveData()
                 app.root.current = 'datasaved'
 
         Button:

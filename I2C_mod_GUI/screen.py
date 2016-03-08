@@ -1,6 +1,10 @@
 import time
 import smbus
 import os
+import os.path
+from openpyxl import Workbook
+from openpyxl import load_workbook
+from openpyxl.styles import Font
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.textinput import TextInput
@@ -20,6 +24,8 @@ bus = smbus.SMBus(1)
 BROADCAST_ADDR = 0x7F
 DEVICE_REG_MODE1 = 0X00
 new_addr = [0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24]
+timings = []
+FILE = "SensoryWalk.xlsx"
 
 def reload_dictionary(user_dict):
     with open("profiles.txt") as f:
@@ -30,6 +36,175 @@ def reload_dictionary(user_dict):
     temp = user_dict.keys()
     sorts = sorted(temp)
     return sorts
+
+def excelDataSave(USR):
+    sheet_exists = False
+    to_edit = None
+    font_header = Font(name='Calibri', size=13, bold=True, italic=False, color='FF000000')
+    font_data = Font(name='Calibri', size=13, bold=False, italic=False, color='FF000000')
+
+    #if the workbook already exists
+    if os.path.isfile(FILE):
+        wb = load_workbook(FILE)
+
+        #see if a sheet already exists for the user, if so, assign that sheet to to_edit
+        for sh in wb:
+            if sh.title == USR:
+                to_edit = sh
+                sheet_exists = True
+
+        if sheet_exists:
+            #print(str(to_edit.dimensions))
+            temp = str(to_edit.dimensions)
+            last_row = int(temp.split("X", 1)[1])
+            next_row = last_row + 1
+
+            date = to_edit.cell(row=next_row, column =1)
+            date.font = font_data
+            date.value = time.strftime("%m/%d/%Y")
+
+            timer = to_edit.cell(row=next_row, column=2)
+            timer.font = font_data
+            timer.value = time.strftime("%I:%M:%S %p")
+
+            feet = to_edit.cell(row=next_row, column=3)
+            feet.font = font_data
+            feet.value = len(timings)
+
+            totalsec = to_edit.cell(row=next_row, column=4)
+            totalsec.font = font_data
+            totalsec.value = sum(timings)
+
+            iterator = 5
+            for j in timings:
+                tem = to_edit.cell(row = next_row, column=iterator)
+                tem.font = font_data
+                tem.value = j
+                iterator += 1
+
+            current_high = int(to_edit['B2'].value)
+
+            if len(timings) > current_high:
+                to_edit['B2'].value = len(timings)
+
+        else:
+            #make a new sheet for the user
+            sheet = wb.create_sheet(title=USR)
+            sheet.column_dimensions['A'].width = 20
+            sheet.column_dimensions['B'].width = 20
+
+             #set up headers and things
+            sheet['A1'] = 'Name'
+            sheet['A1'].font = font_header
+            sheet['B1'] = USR
+            sheet['B1'].font = font_data
+            sheet['A2'] = 'Personal Best in Feet'
+            sheet['A2'].font = font_header
+            #this is a temporary number, on first load, this doesn't have a number, so the number of feet just achieved is put here
+            sheet['B2'] = len(timings)
+            sheet['B2'].font = font_data
+
+            sheet['A4'] = 'Date'
+            sheet['A4'].font = font_header
+            sheet['B4'] = 'Time of Day'
+            sheet['B4'].font = font_header
+            sheet['C4'] = 'Total Feet'
+            sheet['C4'].font = font_header
+            sheet['D4'] = 'Total Time'
+            sheet['D4'].font = font_header
+            iter = 0
+
+            for col in range(5,25):
+                temp = sheet.cell(row = 4, column = col)
+                temp.value = str(iter) + ' to ' + str(iter+1)
+                temp.font = font_header
+                iter += 1
+
+            #actually print the data here
+            date = sheet.cell(row=5, column =1)
+            date.font = font_data
+            date.value = time.strftime("%m/%d/%Y")
+
+            timer = sheet.cell(row=5, column=2)
+            timer.font = font_data
+            timer.value = time.strftime("%I:%M:%S %p")
+
+            feet = sheet.cell(row=5, column=3)
+            feet.font = font_data
+            feet.value = len(timings)
+
+            totalsec = sheet.cell(row=5, column=4)
+            totalsec.font = font_data
+            totalsec.value = sum(timings)
+
+            iterator = 5
+            for j in timings:
+                tem = sheet.cell(row = 5, column=iterator)
+                tem.font = font_data
+                tem.value = j
+                iterator += 1
+
+    #if the workbook doesn't exist
+    else:
+        wb = Workbook()
+        sheet = wb.active
+        sheet.title = USR
+        sheet.column_dimensions['A'].width = 20
+        sheet.column_dimensions['B'].width = 20
+
+        #set up headers and things
+        sheet['A1'] = 'Name'
+        sheet['A1'].font = font_header
+        sheet['B1'] = USR
+        sheet['B1'].font = font_data
+        sheet['A2'] = 'Personal Best in Feet'
+        sheet['A2'].font = font_header
+        #this is a temporary number, on first load, this doesn't have a number, so the number of feet just achieved is put here
+        sheet['B2'] = len(timings)
+        sheet['B2'].font = font_data
+
+        sheet['A4'] = 'Date'
+        sheet['A4'].font = font_header
+        sheet['B4'] = 'Time of Day'
+        sheet['B4'].font = font_header
+        sheet['C4'] = 'Total Feet'
+        sheet['C4'].font = font_header
+        sheet['D4'] = 'Total Time'
+        sheet['D4'].font = font_header
+        iter = 0
+
+        for col in range(5,25):
+            temp = sheet.cell(row = 4, column = col)
+            temp.value = str(iter) + ' to ' + str(iter+1)
+            temp.font = font_header
+            iter += 1
+
+        #actually print the data here
+        date = sheet.cell(row=5, column =1)
+        date.font = font_data
+        date.value = time.strftime("%m/%d/%Y")
+
+        timer = sheet.cell(row=5, column=2)
+        timer.font = font_data
+        timer.value = time.strftime("%I:%M:%S %p")
+
+        feet = sheet.cell(row=5, column=3)
+        feet.font = font_data
+        feet.value = len(timings)
+
+        totalsec = sheet.cell(row=5, column=4)
+        totalsec.font = font_data
+        totalsec.value = sum(timings)
+
+        iterator = 5
+        for j in timings:
+            tem = sheet.cell(row = 5, column=iterator)
+            tem.font = font_data
+            tem.value = j
+            iterator += 1
+
+
+    wb.save(FILE)
 
 
 class myListItemButton(ListItemButton):
@@ -75,6 +250,7 @@ class StartUserRunScreen(Screen):
             print adapter.selection[0].text
             self.sel_usr = adapter.selection[0].text
             self.button_text = 'Start run for ' + adapter.selection[0].text
+            #user_to_save = adapter.selection[0].text
 
 class ManageUserProfilesScreen(Screen):
     pass
@@ -291,7 +467,15 @@ class PanelReplacementScreen(Screen):
             self.result_string = 'Error'
 
 class FinishRunScreen(Screen):
-    pass
+    user_save = StringProperty()
+
+    def saveData(self):
+        #put excel stuff here.  For now, just print out the list
+        print "For run on " + time.strftime("%m/%d/%Y") + " at " + time.strftime("%I:%M:%S %p")
+        print(timings)
+        print "Number of feet reached is " + str(len(timings))
+
+        excelDataSave(self.user_save)
 
 class DataSavedScreen(Screen):
     pass
@@ -302,6 +486,9 @@ class RunningScreen(Screen):
     user_name_text = StringProperty()
     current_panel = NumericProperty()
     sent_active_panel = None
+
+    start_time = None
+    end_time = None
 
     def __init__(self, **kwargs):
         super(RunningScreen, self).__init__(**kwargs)
@@ -351,20 +538,30 @@ class RunningScreen(Screen):
                 print "write error"
         else:
             try:
-                #time.sleep(0.01)
                 result = bus.read_byte(new_addr[self.current_panel])
                 if result == 1:
+
                     bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 3)
                     bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 0)
+
                     print ("RESULT IS 1!!!!")
+
                     self.sent_active_panel = False
                     self.current_panel += 1
                     print ("current_panel incremented")
+
                     if self.current_panel == 1:
+                        #make sure we're starting a new array of timings
+                        del timings[:]
+                        self.start_time = time.time()
                         os.system('mpg123 startuserrun.mp3 &')
+                    
                     #need to add here some kind of statement eventually that says it can only go to panel 20
                     if self.current_panel > 1:
                         self.footNum += 1
+                        self.end_time = time.time()
+                        elapsed = self.end_time - self.start_time
+                        timings.append(round(elapsed, 2))
                         if self.current_panel == 2:
                             os.system('mpg123 one.mp3 &')
                         if self.current_panel == 3:
