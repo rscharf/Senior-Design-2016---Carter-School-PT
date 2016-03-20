@@ -5,7 +5,7 @@
 
 // Define pins for SDA and SCL
 #define SDA_PIN BIT7                                 // P1.7
-#define SCL_PIN BIT8                                 // P1.6
+#define SCL_PIN BIT6                                 // P1.6
 #define RED 0x01									 // P1.0 - Red LED
 
 // Define bit masks for ADC pin and channel used as P1.4
