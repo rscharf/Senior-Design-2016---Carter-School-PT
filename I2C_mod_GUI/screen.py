@@ -223,6 +223,9 @@ class StartUserRunScreen(Screen):
     users_list = ListView()
     button_text = StringProperty()
     sel_usr = StringProperty()
+    pass_vol = NumericProperty()
+    pass_bright = NumericProperty()
+
     def __init__(self, **kwargs):
         super(StartUserRunScreen, self).__init__(**kwargs)
         self.button_text = 'Select User to Start Run'
@@ -250,6 +253,8 @@ class StartUserRunScreen(Screen):
             print adapter.selection[0].text
             self.sel_usr = adapter.selection[0].text
             self.button_text = 'Start run for ' + adapter.selection[0].text
+            self.pass_vol = self.user_dict[self.sel_usr]['vol']
+            self.pass_bright = self.user_dict[self.sel_usr]['bright']
             #user_to_save = adapter.selection[0].text
 
 class ManageUserProfilesScreen(Screen):
@@ -486,6 +491,9 @@ class RunningScreen(Screen):
     user_name_text = StringProperty()
     current_panel = NumericProperty()
     sent_active_panel = None
+    bright_val = NumericProperty()
+    vol_val = NumericProperty()
+
 
     start_time = None
     end_time = None
@@ -542,7 +550,7 @@ class RunningScreen(Screen):
                 if result == 1:
 
                     bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 3)
-                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 0)
+                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, int(self.bright_val)) #number will change to the value in the brightness setting, this is the duty cycle out of 100 for PWM
 
                     print ("RESULT IS 1!!!!")
 
