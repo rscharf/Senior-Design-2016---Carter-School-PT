@@ -6,6 +6,9 @@ byte that is received or is to be transmitted the corresponding callback
 function is called by the USCI I2C function set.
 
 
+PWM HELP:
+http://coder-tronics.com/msp430-timer-pwm-tutorial/
+
 Uli Kretzschmar
 MSP430 Systems
 Freising
@@ -27,8 +30,10 @@ unsigned int state = 0;
 unsigned char incomingData = 0;
 unsigned char sensor_flag = 0;
 unsigned int button_flag = 0;
+unsigned int new_duty_cycle = 0;
 //#define RESET_BUTT 8
-
+/*** Global Variable ***/
+int IncDec_PWM = 1;
 // ADC variables
 // Global variables that store the results (read from the debugger)
  volatile int latest_result;   // most recent result is stored in latest_result
@@ -50,25 +55,33 @@ volatile const char assigned_address = 0x7f;
 
 void main(void)
 {
-  //WDTCTL = WDTPW + WDTHOLD;                            // Stop WDT
-TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, assigned_address); // init the slave
+
+   TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, assigned_address); // init the slave
   _EINT();
   BCSCTL1 = CALBC1_16MHZ; 
   DCOCTL = CALDCO_16MHZ; //16 MHz calibration for clock
   init_adc();
   init_wdt();
+
+
   	P1DIR |= RED;                             // Set RED to output direction
-    P1OUT |= RED;							  // RED ON
     P1DIR |= BJT_OUT;
     P1DIR &= ~BUTTON;
     P1OUT &= ~BJT_OUT;
-  //  P1OUT &= RED;
+
     P1OUT |= BUTTON;
     P1REN |= BUTTON;
 
+    	/*** GPIO Set-Up ***/
+        P1SEL |= BJT_OUT;					// BJT selected Timer0_A Out1 output
 
-    //writeDword(0x7f, (char *) &assigned_address); //reset address to broadcast address in flash mem
-  //LPM0;                                                // Enter LPM0.
+    	/*** Timer0_A Set-Up ***/
+        TA0CCR0 |= 100;					// PWM period
+        TA0CCR1 |= 0;					// TA0CCR1 PWM duty cycle
+        TA0CCTL1 |= OUTMOD_7;			// TA0CCR1 output mode = reset/set
+        TA0CTL |= TASSEL_2 + MC_1;		// SMCLK, Up Mode (Counts to TA0CCR0)
+
+
   _bis_SR_register(GIE+LPM0_bits);
 }
 
@@ -93,7 +106,8 @@ void receive_cb(unsigned char receive){
    {
    	   case 0: //idle state
    		   P1OUT &= ~RED; //turn off on board LED?
-   		   P1OUT &= ~BJT_OUT; //turn off BJT LEDs
+   		   //P1OUT &= ~BJT_OUT; //turn off BJT LEDs
+   		   TA0CCR1 = receive;
    		   break;
    	   case 1: // setting new address
    		   eraseD(); //Erase Data in D
@@ -103,6 +117,8 @@ void receive_cb(unsigned char receive){
    	   case 2: //panel active and listening for sensor trigger
    		   break; //data received doesn't matter
    	   case 3: //idle state with lights activated - turn on LEDs
+   		   //pi
+   		   TA0CCR1 = receive; //set new duty cycle to value of brightness preference
    		   P1OUT |= BJT_OUT; //Turn on BJT LEDs
    		   P1OUT |= RED; //Turn on on-board LED
    		   sensor_flag = 0;
@@ -158,9 +174,10 @@ void transmit_cb(unsigned char volatile *byte){
  ISR_VECTOR(adc_handler, ".int05")
 
 
+
+
 // ===== Watchdog Timer Interrupt Handler =====
 interrupt void WDT_interval_handler(){
-
 
 {
 						ADC10CTL0 |= ADC10SC;  // trigger a conversion

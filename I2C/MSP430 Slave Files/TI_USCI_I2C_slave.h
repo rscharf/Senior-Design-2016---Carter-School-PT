@@ -1,10 +1,11 @@
 #ifndef TI_USCI_I2C_SLAVE
 #define TI_USCI_I2C_SLAVE
 
+#define TA1_BIT 0x04 //PWM timer A pin
 
 // Define pins for SDA and SCL
 #define SDA_PIN BIT7                                 // P1.7
-#define SCL_PIN BIT6                                 // P1.6
+#define SCL_PIN BIT8                                 // P1.6
 #define RED 0x01									 // P1.0 - Red LED
 
 // Define bit masks for ADC pin and channel used as P1.4
