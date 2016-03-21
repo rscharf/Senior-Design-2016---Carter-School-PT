@@ -7,6 +7,12 @@
     deselected_color: 1.875, 1.506, .2902, 2 #239,192,37,1
     selected_color: 1.788, .13332, .8236, 2 #228,17,105,1
 
+<myVolSlider>:
+    orientation: 'vertical'
+    step: 1
+    min: 0
+    max: 100
+
 ScreenManagement:
     transition: sm.NoTransition()
     HomeScreen:
@@ -269,14 +275,14 @@ ScreenManagement:
             size_hint: .26, .085
             pos_hint: {'x': .23, 'y': .33}
 
-        Slider:
+        myVolSlider:
             id: vslide
-            orientation: 'vertical'
-            min: 0
-            max: 100
+            #orientation: 'vertical'
+            #min: 0
+            #max: 100
             pos_hint: {'x': .6, 'y': .3}
             size_hint: .1, .43
-            step: 1
+            #step: 1
 
         Label:
             text: 'Volume:'
@@ -456,15 +462,15 @@ ScreenManagement:
             size_hint: .26, .085
             pos_hint: {'x': .23, 'y': .33}
 
-        Slider:
+        myVolSlider:
             id: vslide
-            orientation: 'vertical'
+            #orientation: 'vertical'
             value: root.edit_vol
-            min: 0
-            max: 100
+            #min: 0
+            #max: 100
             pos_hint: {'x': .6, 'y': .3}
             size_hint: .1, .43
-            step: 1
+            #step: 1
 
         Label:
             text: 'Volume:'

@@ -37,6 +37,17 @@ def reload_dictionary(user_dict):
     sorts = sorted(temp)
     return sorts
 
+def changeRange(value, leftMin, leftMax, rightMin, rightMax):
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = float(value - leftMin) / float(leftSpan)
+
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
+
 def excelDataSave(USR):
     sheet_exists = False
     to_edit = None
@@ -210,6 +221,25 @@ def excelDataSave(USR):
 class myListItemButton(ListItemButton):
     pass
 
+class myVolSlider(Slider):
+    def on_touch_up(self, touch):
+        released = super(myVolSlider, self).on_touch_up(touch)
+        if released:
+            #change volume and play ping
+            foo = str(self.value)
+            foo = foo[:-2]
+            #print foo
+            num = int(foo)
+            new = changeRange(num, 0, 100, 85, 100)
+            print 'num in range is: ' + str(new)
+            if (num == 0):
+                volstr = "amixer sset 'PCM' 0%"
+            else:
+                volstr = "amixer sset 'PCM' " + str(new) + "%"
+            os.system(volstr)
+            os.system('mpg123 bell.mp3 &')
+
+        return released
 
 class HomeScreen(Screen):
     pass
@@ -520,6 +550,19 @@ class RunningScreen(Screen):
         self.sent_active_panel = False
         self.footNum = 0
         self.current_panel = 0
+        #set the volume for the current user
+        foo = str(self.vol_val)
+        foo = foo[:-2]
+        num = int(foo)
+        new = changeRange(num, 0, 100, 85, 100)
+        print 'num in range is: ' + str(new)
+        if (num == 0):
+            volstr = "amixer sset 'PCM' 0%"
+        else:
+            volstr = "amixer sset 'PCM' " + str(new) + "%"
+        os.system(volstr)
+
+
 
     def startScreen(self):
         #schedule timer to check for i2c data
