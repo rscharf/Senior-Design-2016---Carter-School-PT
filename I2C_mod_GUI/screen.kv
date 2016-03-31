@@ -47,6 +47,7 @@ ScreenManagement:
     FinishRunScreen:
         user_save: startrun.sel_usr
     DataSavedScreen:
+    ExportDataScreen:
 
 <HomeScreen>:
     name: 'home'
@@ -110,17 +111,51 @@ ScreenManagement:
         Button:
             text: 'Panel Replacement'
             font_size: 30
-            size_hint: .55, .2
-            pos_hint: {'x': .225, 'y': .52}
+            size_hint: .55, .15
+            pos_hint: {'x': .225, 'y': .6}
             on_press: app.root.current = 'panelreplacement'
 
         Button:
             text: 'Initial Panel Configuration'
             font_size: 30
-            size_hint: .55, .2
-            pos_hint: {'x': .225, 'y': .27}
+            size_hint: .55, .15
+            pos_hint: {'x': .225, 'y': .4}
             on_press: app.root.current = 'initpanelconfig'
 
+        Button:
+            text: 'Export Excel Data'
+            font_size: 30
+            size_hint: .55, .15
+            pos_hint: {'center_x': .5, 'y': .2}
+            on_press: app.root.current = 'exportdata'
+
+<ExportDataScreen>:
+    name: 'exportdata'
+    FloatLayout:
+        Label:
+            text: 'Export Excel Data'
+            font_size: 40
+            pos_hint: {'x': 0, 'y': .4}
+
+        Button:
+            text: 'Settings'
+            font_size: 20
+            size_hint: .189, .09
+            pos_hint: {'x': .811, 'y': 0}
+            on_press:
+                app.root.current = 'settings'
+
+        Label:
+            text: '1. Ensure silver flash drive is inserted into the indicated slot\n2. Press export data button\n3. Remove flash drive from slot\n4. Insert into personal computer\n5. Find file titled "SensoryWalk.xlsx"'
+            font_size: 25
+            pos_hint: {'x': 0, 'center_y': .6}
+
+        Button:
+            text: 'Export Data'
+            font_size: 28
+            size_hint: .25, .12
+            pos_hint: {'center_x': .5, 'y': .1}
+            on_press:
 
 <StartUserRunScreen>:
     name: 'startrun'
@@ -303,6 +338,7 @@ ScreenManagement:
             pos_hint: {'x': .8, 'y': .3}
             size_hint: .1, .43
             step: 1
+            on_value: root.OnSliderValueChange()
 
         Label:
             text: 'Brightness:'
@@ -319,7 +355,7 @@ ScreenManagement:
 
     FloatLayout:
         Label:
-            text: 'Profile for'
+            text: 'User Profile'
             font_size: 35
             pos_hint: {'center_x': .5, 'y': .26}
 
@@ -429,6 +465,7 @@ ScreenManagement:
             on_press:
                 app.root.current = 'confirmedit'
                 root.edit_profile()
+                root.offLights()
 
         Button:
             text: 'Cancel'
@@ -437,6 +474,7 @@ ScreenManagement:
             pos_hint: {'x': .811, 'y': 0}
             on_press:
                 app.root.current = 'manageprofiles'
+                root.offLights()
 
         TextInput:
             id: textin
@@ -492,6 +530,7 @@ ScreenManagement:
             pos_hint: {'x': .8, 'y': .3}
             size_hint: .1, .43
             step: 1
+            on_value: root.OnSliderValueChange()
 
         Label:
             text: 'Brightness:'
@@ -620,6 +659,7 @@ ScreenManagement:
 <PanelReplacementScreen>:
     name: 'panelreplacement'
     spinner: panelspin
+    passinput: passin
 
     FloatLayout:
         Label:
@@ -634,10 +674,11 @@ ScreenManagement:
             pos_hint: {'x': .811, 'y': 0}
             on_press:
                 app.root.current = 'settings'
+                root.cancelButt()
 
         Label:
             text: 'Select Panel to Replace:'
-            pos_hint: {'x': -.1, 'y': .05}
+            pos_hint: {'x': -.1, 'center_y': .7}
             font_size: 30
 
         Spinner:
@@ -645,7 +686,7 @@ ScreenManagement:
             text: '#'
             values: ('0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20')
             size_hint: .09, .12
-            pos_hint: {'center_x': .7, 'center_y': .55}
+            pos_hint: {'center_x': .7, 'center_y': .7}
             font_size: 40
 
         Button:
@@ -657,8 +698,20 @@ ScreenManagement:
 
         Label:
             font_size: 32
-            pos_hint: {'center_x': .5, 'y': -.25}
+            pos_hint: {'center_x': .5, 'y': -.18}
             text: root.result_string
+
+        Label:
+            text: 'Password:'
+            pos_hint: {'center_x': .35, 'center_y': .5}
+            font_size: 25
+
+        TextInput:
+            id: passin
+            size_hint: .26, .075
+            pos_hint: {'center_x': .6, 'center_y': .5}
+            multiline: False
+            password: True
 
 <FinishRunScreen>:
     name: 'finishrun'
