@@ -108,6 +108,8 @@ class ManageUserProfilesScreen(Screen):
 class InitialPanelConfigScreen(Screen):
     panel_connect = StringProperty()
     panelNo = 0
+    result_string = StringProperty()
+    passinput = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(InitialPanelConfigScreen, self).__init__(**kwargs)
@@ -116,27 +118,33 @@ class InitialPanelConfigScreen(Screen):
     def panelConnected(self):
         #password protect the code below and write error messages to new result string
         #python I2C code goes here to send actual address
-        if self.panelNo < 20:
-            #send MSP430 state var then send new address
-            bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, 1)
-            bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelNo])
-            
-            time.sleep(1)
+        if self.passinput.text == PASSWORD:
+            if self.panelNo < 20:
+                #send MSP430 state var then send new address
+                bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, 1)
+                bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelNo])
+                
+                time.sleep(1)
 
-            #read new address back from MSP430
-            backAddr = bus.read_byte(new_addr[self.panelNo])
-            
-            if (backAddr == new_addr[self.panelNo]):
-                #update label for GUI
-                self.panelNo += 1
-                self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
-            else:
-                #display error with what was received
-                self.panel_connect = 'Error: did not receive address back.  Received: ' + str(backAddr)
+                #read new address back from MSP430
+                backAddr = bus.read_byte(new_addr[self.panelNo])
+                
+                if (backAddr == new_addr[self.panelNo]):
+                    #update label for GUI
+                    self.panelNo += 1
+                    self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
+                    self.result_string = ''
+                else:
+                    #display error with what was received
+                    self.result_string = 'Error: did not receive address back.  Received: ' + str(backAddr)
+        else:
+            self.result_string = 'Invalid password!'
 
     def cancelButton(self):
         self.panelNo = 0
         self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
+        self.passinput.text = ''
+        self.result_string = ''
 
 class EditProfileScreen(Screen):
     user_dict = {}
