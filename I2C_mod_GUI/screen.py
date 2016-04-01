@@ -118,27 +118,32 @@ class InitialPanelConfigScreen(Screen):
     def panelConnected(self):
         #password protect the code below and write error messages to new result string
         #python I2C code goes here to send actual address
-        if self.passinput.text == PASSWORD:
-            if self.panelNo < 20:
-                #send MSP430 state var then send new address
-                bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, 1)
-                bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelNo])
-                
-                time.sleep(1)
+        try:
+            if self.passinput.text == PASSWORD:
+                if self.panelNo < 20:
+                    #send MSP430 state var then send new address
+                    bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, 1)
+                    bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelNo])
+                    
+                    time.sleep(1)
 
-                #read new address back from MSP430
-                backAddr = bus.read_byte(new_addr[self.panelNo])
-                
-                if (backAddr == new_addr[self.panelNo]):
-                    #update label for GUI
-                    self.panelNo += 1
-                    self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
-                    self.result_string = ''
-                else:
-                    #display error with what was received
-                    self.result_string = 'Error: did not receive address back.  Received: ' + str(backAddr)
-        else:
-            self.result_string = 'Invalid password!'
+                    #read new address back from MSP430
+                    backAddr = bus.read_byte(new_addr[self.panelNo])
+                    
+                    if (backAddr == new_addr[self.panelNo]):
+                        #update label for GUI
+                        self.panelNo += 1
+                        self.panel_connect = 'Connect Panel: ' + str(self.panelNo)
+                        self.result_string = ''
+                    else:
+                        #display error with what was received
+                        self.result_string = 'Error: did not receive address back.  Received: ' + str(backAddr)
+            else:
+                self.result_string = 'Invalid password!'
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
     def cancelButton(self):
         self.panelNo = 0
@@ -192,17 +197,27 @@ class ProfileEditingScreen(Screen):
     brightslide = ObjectProperty()
 
     def on_enter(self, *args):
-        self.userKey = fn.reload_dictionary(self.user_dict)
-        self.edit_lang = self.user_dict[self.usr_to_edit]['lang']
-        self.edit_bright = self.user_dict[self.usr_to_edit]['bright']
-        self.edit_vol = self.user_dict[self.usr_to_edit]['vol']
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_3)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, int(self.edit_vol))
+        try:
+            self.userKey = fn.reload_dictionary(self.user_dict)
+            self.edit_lang = self.user_dict[self.usr_to_edit]['lang']
+            self.edit_bright = self.user_dict[self.usr_to_edit]['bright']
+            self.edit_vol = self.user_dict[self.usr_to_edit]['vol']
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_3)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, int(self.edit_vol))
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
     def OnSliderValueChange(self):
-        val = int(self.brightslide.value)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_3)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, val)
+        try:
+            val = int(self.brightslide.value)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_3)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, val)
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
     def edit_profile(self):
         f = open("profiles.txt", "r")
@@ -218,8 +233,13 @@ class ProfileEditingScreen(Screen):
         self.string_pass = str(self.nameinput.text)
 
     def offLights(self):
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_0)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, 0)
+        try:
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_0)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, 0)
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
 
 class ConfirmEditScreen(Screen):
@@ -284,9 +304,14 @@ class CreateProfileScreen(Screen):
 
 
     def OnSliderValueChange(self):
-        val = int(self.brightslide.value)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_3)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, val)
+        try:
+            val = int(self.brightslide.value)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_3)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, val)
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
     def on_enter(self, *args):
         print('on_enter called for create profile screen')
@@ -314,13 +339,18 @@ class CreateProfileScreen(Screen):
             f.close()
 
     def cancelProf(self):
-        self.nameinput.text = ''
-        self.spinner.text = 'Select Language'
-        self.volslide.value = 0
-        self.brightslide.value = 0
-        #turn off panel 0 LEDs (showing sample brightness)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_0)
-        bus.write_byte_data(0x10, DEVICE_REG_MODE1, 0)
+        try:
+            self.nameinput.text = ''
+            self.spinner.text = 'Select Language'
+            self.volslide.value = 0
+            self.brightslide.value = 0
+            #turn off panel 0 LEDs (showing sample brightness)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, STATE_0)
+            bus.write_byte_data(0x10, DEVICE_REG_MODE1, 0)
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
 class ConfirmCreateProfileScreen(Screen):
     usr_create = StringProperty()
@@ -333,26 +363,31 @@ class PanelReplacementScreen(Screen):
     passinput = ObjectProperty()
 
     def panelConnected(self):
-        if self.passinput.text == PASSWORD:
-            #python I2C code goes here to send actual address
-            #send MSP430 state var then send new address
-            self.panelToRep = int(self.spinner.text)
-            bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, STATE_1)
-            bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelToRep])
-                
-            time.sleep(1)
+        try:
+            if self.passinput.text == PASSWORD:
+                #python I2C code goes here to send actual address
+                #send MSP430 state var then send new address
+                self.panelToRep = int(self.spinner.text)
+                bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, STATE_1)
+                bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelToRep])
+                    
+                time.sleep(1)
 
-            #read new address back from MSP430
-            backAddr = bus.read_byte(new_addr[self.panelToRep])
-                
-            if (backAddr == new_addr[self.panelToRep]):
-                #update label for GUI
-                self.result_string = 'Panel Succesfully Connected'
+                #read new address back from MSP430
+                backAddr = bus.read_byte(new_addr[self.panelToRep])
+                    
+                if (backAddr == new_addr[self.panelToRep]):
+                    #update label for GUI
+                    self.result_string = 'Panel Succesfully Connected'
+                else:
+                    #display error with what was received
+                    self.result_string = 'Error'
             else:
-                #display error with what was received
-                self.result_string = 'Error'
-        else:
-            self.result_string = "Invalid password!"
+                self.result_string = "Invalid password!"
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
     def cancelButt(self):
         self.passinput.text = ''
@@ -401,10 +436,15 @@ class RunningScreen(Screen):
             self.footMarkerStr = str(self.footNum) + ' feet'
 
     def finishRun(self):
-        for num in range(self.current_panel-1, -1, -1):
-            bus.write_byte_data(new_addr[num], DEVICE_REG_MODE1, STATE_0)
-            bus.write_byte_data(new_addr[num], DEVICE_REG_MODE1, 0)
-        self.current_panel = 0
+        try:
+            for num in range(self.current_panel-1, -1, -1):
+                bus.write_byte_data(new_addr[num], DEVICE_REG_MODE1, STATE_0)
+                bus.write_byte_data(new_addr[num], DEVICE_REG_MODE1, 0)
+            self.current_panel = 0
+        except IOError as (errno, strerror):
+                #raise e
+                print "I/O error({0}): {1}".format(errno, strerror)
+                print "write error"
 
 
     def on_enter(self, *args):
