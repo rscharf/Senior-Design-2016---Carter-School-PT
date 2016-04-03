@@ -144,18 +144,24 @@ ScreenManagement:
             pos_hint: {'x': .811, 'y': 0}
             on_press:
                 app.root.current = 'settings'
+                root.backButt()
 
         Label:
-            text: '1. Ensure silver flash drive is inserted into the indicated slot\n2. Press export data button\n3. Remove flash drive from slot\n4. Insert into personal computer\n5. Find file titled "SensoryWalk.xlsx"'
+            text: '1. Ensure silver flash drive is inserted into the indicated slot\n2. Press export data button\n3. Remove flash drive from slot when indicated safe\n4. Insert into personal computer\n5. Find file titled "SensoryWalk.xlsx"'
             font_size: 25
             pos_hint: {'x': 0, 'center_y': .6}
+
+        Label:
+            text: root.removestr
+            font_size: 30
+            pos_hint: {'x': 0, 'center_y': .32}
 
         Button:
             text: 'Export Data'
             font_size: 28
             size_hint: .25, .12
             pos_hint: {'center_x': .5, 'y': .1}
-            on_press:
+            on_press: root.exportButt()
 
 <StartUserRunScreen>:
     name: 'startrun'

@@ -1,4 +1,13 @@
 #file --fn.py--
+from openpyxl import Workbook
+from openpyxl import load_workbook
+from openpyxl.styles import Font
+import os
+import os.path
+import time
+
+FILE = "SensoryWalk.xlsx"
+timings = []
 
 def reload_dictionary(user_dict):
     with open("profiles.txt") as f:

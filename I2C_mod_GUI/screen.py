@@ -409,7 +409,15 @@ class DataSavedScreen(Screen):
     pass
 
 class ExportDataScreen(Screen):
-    pass
+    removestr = StringProperty()
+
+    def exportButt(self):
+        self.removestr = ''
+        os.system('sh export.sh')
+        self.removestr = 'Now safe to remove flash drive'
+
+    def backButt(self):
+        self.removestr = ''    
 
 class RunningScreen(Screen):
     footMarkerStr = StringProperty()
