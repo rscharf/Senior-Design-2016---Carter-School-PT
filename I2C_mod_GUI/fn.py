@@ -8,6 +8,7 @@ import time
 
 FILE = "SensoryWalk.xlsx"
 timings = []
+numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
 
 def reload_dictionary(user_dict):
     with open("profiles.txt") as f:
@@ -29,6 +30,41 @@ def changeRange(value, leftMin, leftMax, rightMin, rightMax):
 
     # Convert the 0-1 range into a value in the right range.
     return rightMin + (valueScaled * rightSpan)
+
+def toPlay(currentPanel, language):
+    #os.system('mpg123 one.mp3 &')
+    if language == 'English':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/English/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/English/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/English/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Cape Verdean Creole':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'French':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/French/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Cantonese':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Italian':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Italian/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Italian/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Italian/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Spanish':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/' + numbers[currentPanel] + '.mp3 &'
+
+    return outStr
 
 def excelDataSave(USR):
     sheet_exists = False

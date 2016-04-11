@@ -71,6 +71,7 @@ class StartUserRunScreen(Screen):
     sel_usr = StringProperty()
     pass_vol = NumericProperty()
     pass_bright = NumericProperty()
+    pass_lang = StringProperty()
 
     def __init__(self, **kwargs):
         super(StartUserRunScreen, self).__init__(**kwargs)
@@ -101,6 +102,7 @@ class StartUserRunScreen(Screen):
             self.button_text = 'Start run for ' + adapter.selection[0].text
             self.pass_vol = self.user_dict[self.sel_usr]['vol']
             self.pass_bright = self.user_dict[self.sel_usr]['bright']
+            self.pass_lang = self.user_dict[self.sel_usr]['lang']
 
 class ManageUserProfilesScreen(Screen):
     pass
@@ -428,6 +430,7 @@ class RunningScreen(Screen):
     bright_val = NumericProperty()
     vol_val = NumericProperty()
     bright_send = None
+    language = StringProperty()
 
     start_time = None
     end_time = None
@@ -510,25 +513,23 @@ class RunningScreen(Screen):
                     print ("RESULT IS 1!!!!")
 
                     self.sent_active_panel = False
-                    self.current_panel += 1
-                    print ("current_panel incremented")
 
-                    if self.current_panel == 1:
+                    if self.current_panel == 0:
                         #make sure we're starting a new array of timings
                         del timings[:]
                         self.start_time = time.time()
-                        os.system('mpg123 startuserrun.mp3 &')
+                        #os.system('mpg123 startuserrun.mp3 &')
                     
                     #need to add here some kind of statement eventually that says it can only go to panel 20
-                    if self.current_panel > 1:
+                    if self.current_panel > 0:
                         self.footNum += 1
                         self.end_time = time.time()
                         elapsed = self.end_time - self.start_time
                         timings.append(round(elapsed, 2))
-                        if self.current_panel == 2:
-                            os.system('mpg123 one.mp3 &')
-                        if self.current_panel == 3:
-                            os.system('mpg123 two.mp3 &')
+                        #if self.current_panel == 2:
+                        #    os.system('mpg123 one.mp3 &')
+                        #if self.current_panel == 3:
+                        #    os.system('mpg123 two.mp3 &')
                         print ("current_panel is > 1")
                         if (self.footNum == 1):
                             self.footMarkerStr = str(self.footNum) + ' foot'
@@ -536,6 +537,11 @@ class RunningScreen(Screen):
                             self.footMarkerStr = str(self.footNum) + ' feet'
 
                         print('working - ' + str(self.footNum))
+
+                    soundStr = fn.toPlay(self.current_panel, self.language)
+                    os.system(soundStr)
+                    self.current_panel += 1
+                    print ("current_panel incremented")
                 else:
                     print ('result not 1')
             except IOError as (errno, strerror):

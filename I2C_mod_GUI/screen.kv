@@ -27,6 +27,7 @@ ScreenManagement:
         user_name_text: startrun.sel_usr
         vol_val: startrun.pass_vol
         bright_val: startrun.pass_bright
+        language: startrun.pass_lang
     EditProfileScreen:
         id: editprofile
     DeleteProfileScreen:
@@ -330,7 +331,7 @@ ScreenManagement:
         Spinner:
             id: langspin
             text: 'Select Language'
-            values: ('English', 'Spanish', 'French', 'Cantonese', 'Dutch', 'Mandarin', 'Haitian Creole')
+            values: ('English', 'Cape Verdean Creole', 'French', 'Cantonese', 'Italian', 'Spanish')
             size_hint: .26, .085
             pos_hint: {'x': .23, 'y': .33}
 
@@ -520,7 +521,7 @@ ScreenManagement:
         Spinner:
             id: langspin
             text: root.edit_lang
-            values: ('English', 'Spanish', 'French', 'Cantonese', 'Dutch', 'Mandarin', 'Haitian Creole')
+            values: ('English', 'Cape Verdean Creole', 'French', 'Cantonese', 'Italian', 'Spanish')
             size_hint: .26, .085
             pos_hint: {'x': .23, 'y': .33}
 
