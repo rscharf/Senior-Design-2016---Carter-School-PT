@@ -17,37 +17,31 @@ Freising
 
 #include "TI_USCI_I2C_slave.h"
 
+//I2C Functions - Callback and Address set
 void receive_cb(unsigned char receive);
 void transmit_cb(unsigned char volatile *receive);
 void set_address(unsigned char new_address);
 void start_cb();
 
-unsigned char set_add_flag = 0;
-unsigned char TXData = 0 ;
-unsigned char RXData = 0 ;
-unsigned int byte_num = 0;
-unsigned int state = 0;
-unsigned char incomingData = 0;
-unsigned char sensor_flag = 0;
-unsigned int button_flag = 0;
-unsigned int new_duty_cycle = 0;
-//#define RESET_BUTT 8
-/*** Global Variable ***/
-int IncDec_PWM = 1;
+//I2C Variables
+unsigned char RXData = 0 ; //used in the start_cb()
+unsigned int byte_num = 0; //Determines whether state or data is being sent over the bus
+unsigned int state = 0; //Used in recive_cb and transmit_cb to determine panel reaction
+unsigned char sensor_flag = 0; //Set when sensor is triggered (set in ADC functions in WDT)
+unsigned int new_duty_cycle = 0; //Light brightness setting
+
+
+
 // ADC variables
-// Global variables that store the results (read from the debugger)
  volatile int latest_result;   // most recent result is stored in latest_result
- //volatile unsigned long conversion_count=0; //total number of conversions done
  volatile int adc_vals_before_ave = 0;
  volatile int adc_average = 0;
  volatile int adc_average_add = 0;
  volatile int adc_vals_array[5];
+
+ //Debugging Variables -- used for manual reset button
+ unsigned int button_flag = 0;
  volatile unsigned char last_button;
- volatile unsigned char last_button2;
- int blink_interval = 0;
- int blink_counter = 0;
-
-
 
 // Declare variables in the information memory
 #pragma DATA_SECTION(assigned_address,".infoD");
@@ -56,33 +50,29 @@ volatile const char assigned_address = 0x7f;
 void main(void)
 {
 
-   TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, assigned_address); // init the slave
+   TI_USCI_I2C_slaveinit(start_cb, transmit_cb, receive_cb, assigned_address); // initialize the slave
   _EINT();
-  BCSCTL1 = CALBC1_16MHZ; 
-  DCOCTL = CALDCO_16MHZ; //16 MHz calibration for clock
+  BCSCTL1 = CALBC1_16MHZ; //16 MHz calibration for clock
+  DCOCTL = CALDCO_16MHZ;
   init_adc();
   init_wdt();
 
+  /*** GPIO Set-Up ***/
+  P1DIR |= RED;  // Set on and off-board LEDs to output direction
+  P1DIR |= BJT_OUT;
+  P1DIR &= ~BUTTON;
+  P1OUT &= ~BJT_OUT;
+  P1OUT |= BUTTON;
+  P1REN |= BUTTON;
+  P1SEL |= BJT_OUT;// BJT selected Timer0_A Out1 output
 
-  	P1DIR |= RED;                             // Set RED to output direction
-    P1DIR |= BJT_OUT;
-    P1DIR &= ~BUTTON;
-    P1OUT &= ~BJT_OUT;
+  /*** Timer0_A Set-Up ***/
+  TA0CCR0 |= 100;// PWM period
+  TA0CCR1 |= 0;	// TA0CCR1 PWM duty cycle
+  TA0CCTL1 |= OUTMOD_7;// TA0CCR1 output mode = reset/set
+  TA0CTL |= TASSEL_2 + MC_1;// SMCLK, Up Mode (Counts to TA0CCR0)
 
-    P1OUT |= BUTTON;
-    P1REN |= BUTTON;
-
-    	/*** GPIO Set-Up ***/
-        P1SEL |= BJT_OUT;					// BJT selected Timer0_A Out1 output
-
-    	/*** Timer0_A Set-Up ***/
-        TA0CCR0 |= 100;					// PWM period
-        TA0CCR1 |= 0;					// TA0CCR1 PWM duty cycle
-        TA0CCTL1 |= OUTMOD_7;			// TA0CCR1 output mode = reset/set
-        TA0CTL |= TASSEL_2 + MC_1;		// SMCLK, Up Mode (Counts to TA0CCR0)
-
-
-  _bis_SR_register(GIE+LPM0_bits);
+  _bis_SR_register(GIE+LPM0_bits); //Low power mode, global interrupt enable
 }
 
 void start_cb(){
@@ -177,51 +167,34 @@ void transmit_cb(unsigned char volatile *byte){
 
 
 // ===== Watchdog Timer Interrupt Handler =====
+//WDT Interrupt is responsible for ADC function. When a panel is in
+//the correct state, it recognizes a sensor trigger and sets the sensor
+//flag, to be used in the I2C callback functions above
 interrupt void WDT_interval_handler(){
 
 {
-						ADC10CTL0 |= ADC10SC;  // trigger a conversion
-						//Reset button. Should this only be accessible from state 2/3?
-						//button handling - for now this button acts as a sensor+
-						unsigned char b;
-						b= (P1IN & BUTTON);  // read the BUTTON bit
-						if (last_button && (b==0))
-						{ // has the button bit gone from high to low
-						  //turn off LEDs and go back to idle state
-							//P1OUT ^= RED;
-							P1OUT &= ~RED; //turn off on board LED?
-							P1OUT &= ~BJT_OUT; //turn off BJT LEDs
-							button_flag = 1;
-							state = 0;
-						}
-						last_button=b;    // remember button reading for next time.
+ADC10CTL0 |= ADC10SC;  // trigger a conversion
 
 
-						int j;
-						for (j=0; j<5; j++)
-						{
-							adc_average_add = adc_average_add + adc_vals_array[j];
-						}
-						adc_average = adc_average_add/5;
-						adc_average_add = 0;
+int j;
+for (j=0; j<5; j++){
+	adc_average_add = adc_average_add + adc_vals_array[j];
+}
+adc_average = adc_average_add/5;
+adc_average_add = 0;
 
-						if ((adc_average > IR_THRESHOLD) && (state == 2))
-						{
-							//P1OUT |= RED;
-							sensor_flag = 1; //indicate sensor trigger
-						}
+if ((adc_average > IR_THRESHOLD) && (state == 2)){
+	sensor_flag = 1; //indicate sensor trigger
+}
+if (adc_vals_before_ave == 5){
+	adc_vals_before_ave = 0;
+}
+else{
+	adc_vals_array[adc_vals_before_ave] = latest_result;
+	adc_vals_before_ave++;
+}
 
-						if (adc_vals_before_ave == 5)
-						{
-							adc_vals_before_ave = 0;
-						}
-						else
-						{
-							adc_vals_array[adc_vals_before_ave] = latest_result;
-							adc_vals_before_ave++;
-						}
-
-	 	 }
+}
 
 }
 
