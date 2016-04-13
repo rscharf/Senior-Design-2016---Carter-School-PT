@@ -493,61 +493,63 @@ class RunningScreen(Screen):
 
        
         if self.sent_active_panel == False:
-            try:
-                bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, STATE_2)
-                bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 0) #temp, delete later
+            if self.current_panel < 21:
+                try:
+                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, STATE_2)
+                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, 0) #temp, delete later
 
-                self.sent_active_panel = True
-            except IOError as (errno, strerror):
-                #raise e
-                print "I/O error({0}): {1}".format(errno, strerror)
-                print "write error"
+                    self.sent_active_panel = True
+                except IOError as (errno, strerror):
+                    #raise e
+                    print "I/O error({0}): {1}".format(errno, strerror)
+                    print "write error"
         else:
-            try:
-                result = bus.read_byte(new_addr[self.current_panel])
-                if result == 1:
+            if self.current_panel < 21:
+                try:
+                    result = bus.read_byte(new_addr[self.current_panel])
+                    if result == 1:
 
-                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, STATE_3)
-                    bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, self.bright_send) #number will change to the value in the brightness setting, this is the duty cycle out of 100 for PWM
+                        bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, STATE_3)
+                        bus.write_byte_data(new_addr[self.current_panel], DEVICE_REG_MODE1, self.bright_send) #number will change to the value in the brightness setting, this is the duty cycle out of 100 for PWM
 
-                    print ("RESULT IS 1!!!!")
+                        print ("RESULT IS 1!!!!")
 
-                    self.sent_active_panel = False
+                        self.sent_active_panel = False
 
-                    if self.current_panel == 0:
-                        #make sure we're starting a new array of timings
-                        del timings[:]
-                        self.start_time = time.time()
-                        #os.system('mpg123 startuserrun.mp3 &')
-                    
-                    #need to add here some kind of statement eventually that says it can only go to panel 20
-                    if self.current_panel > 0:
-                        self.footNum += 1
-                        self.end_time = time.time()
-                        elapsed = self.end_time - self.start_time
-                        timings.append(round(elapsed, 2))
-                        #if self.current_panel == 2:
-                        #    os.system('mpg123 one.mp3 &')
-                        #if self.current_panel == 3:
-                        #    os.system('mpg123 two.mp3 &')
-                        print ("current_panel is > 1")
-                        if (self.footNum == 1):
-                            self.footMarkerStr = str(self.footNum) + ' foot'
-                        else:
-                            self.footMarkerStr = str(self.footNum) + ' feet'
+                        if self.current_panel == 0:
+                            #make sure we're starting a new array of timings
+                            del timings[:]
+                            self.start_time = time.time()
+                            #os.system('mpg123 startuserrun.mp3 &')
+                        
+                        #need to add here some kind of statement eventually that says it can only go to panel 20
+                        if self.current_panel > 0:
+                            self.footNum += 1
+                            self.end_time = time.time()
+                            elapsed = self.end_time - self.start_time
+                            timings.append(round(elapsed, 2))
+                            #if self.current_panel == 2:
+                            #    os.system('mpg123 one.mp3 &')
+                            #if self.current_panel == 3:
+                            #    os.system('mpg123 two.mp3 &')
+                            print ("current_panel is > 1")
+                            if (self.footNum == 1):
+                                self.footMarkerStr = str(self.footNum) + ' foot'
+                            else:
+                                self.footMarkerStr = str(self.footNum) + ' feet'
 
-                        print('working - ' + str(self.footNum))
+                            print('working - ' + str(self.footNum))
 
-                    soundStr = fn.toPlay(self.current_panel, self.language)
-                    os.system(soundStr)
-                    self.current_panel += 1
-                    print ("current_panel incremented")
-                else:
-                    print ('result not 1')
-            except IOError as (errno, strerror):
-                #raise e
-                print "I/O error({0}): {1}".format(errno, strerror)
-                print "read error"
+                        soundStr = fn.toPlay(self.current_panel, self.language)
+                        os.system(soundStr)
+                        self.current_panel += 1
+                        print ("current_panel incremented")
+                    else:
+                        print ('result not 1')
+                except IOError as (errno, strerror):
+                    #raise e
+                    print "I/O error({0}): {1}".format(errno, strerror)
+                    print "read error"
 
 
 
