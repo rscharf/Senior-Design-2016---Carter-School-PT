@@ -43,16 +43,21 @@ def toPlay(currentPanel, language):
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/zero.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/' + numbers[currentPanel] + '.mp3 &'
-    elif language == 'French':
+    elif language == 'French/Haitian Creole':
         if currentPanel == 0:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/French/zero.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/' + numbers[currentPanel] + '.mp3 &'
-    elif language == 'Cantonese':
+    elif language == 'Cantonese (Male)':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseM/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/zero.mp3 &'
         else:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/' + numbers[currentPanel] + '.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseM/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Cantonese (Female)':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseF/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseF/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Italian':
         if currentPanel == 0:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Italian/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Italian/zero.mp3 &'

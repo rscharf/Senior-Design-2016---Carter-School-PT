@@ -483,6 +483,7 @@ class RunningScreen(Screen):
                             self.end_time = time.time()
                             elapsed = self.end_time - self.start_time
                             timings.append(round(elapsed, 2))
+                            self.start_time = self.end_time
                             #if self.current_panel == 2:
                             #    os.system('mpg123 one.mp3 &')
                             #if self.current_panel == 3:
