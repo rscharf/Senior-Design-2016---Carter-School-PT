@@ -7,7 +7,7 @@ import os.path
 import time
 
 FILE = "SensoryWalk.xlsx"
-timings = []
+#timings = []
 numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
 
 def reload_dictionary(user_dict):
@@ -66,7 +66,7 @@ def toPlay(currentPanel, language):
 
     return outStr
 
-def excelDataSave(USR):
+def excelDataSave(USR, timings):
     sheet_exists = False
     to_edit = None
     font_header = Font(name='Calibri', size=13, bold=True, italic=False, color='FF000000')

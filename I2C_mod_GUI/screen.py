@@ -360,7 +360,7 @@ class FinishRunScreen(Screen):
         print(timings)
         print "Number of feet reached is " + str(len(timings))
 
-        fn.excelDataSave(self.user_save)
+        fn.excelDataSave(self.user_save, timings)
 
 class DataSavedScreen(Screen):
     pass
