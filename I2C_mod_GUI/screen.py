@@ -120,7 +120,6 @@ class EditProfileScreen(Screen):
 
     def on_enter(self, *args):
         print('on_enter called for edit profile screen')
-        #self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
         self.userKey = fn.reload_dictionary(self.user_dict)
@@ -214,7 +213,6 @@ class DeleteProfileScreen(Screen):
 
     def on_enter(self, *args):
         print('on_enter called for delete profile screen')
-        #self.sel_usr = 'No user selected'
         del self.userKey[:]
         self.user_dict.clear()
         self.userKey = fn.reload_dictionary(self.user_dict)
@@ -248,6 +246,9 @@ class ConfirmDeleteScreen(Screen):
 
 class ProfileDeletedScreen(Screen):
     usr_del = StringProperty()
+
+    def deleteData(self):
+        fn.excelDeleteSheet(self.usr_del)
 
 class CreateProfileScreen(Screen):
     spinner = ObjectProperty()
@@ -376,6 +377,9 @@ class ExportDataScreen(Screen):
     def backButt(self):
         self.removestr = ''    
 
+class ConfirmDeleteDataScreen(Screen):
+    usr_name = StringProperty()
+
 class RunningScreen(Screen):
     footMarkerStr = StringProperty()
     footNum = NumericProperty()
@@ -444,9 +448,7 @@ class RunningScreen(Screen):
         self.footMarkerStr = str(self.footNum) + ' feet'
 
     def startRun(self, dt):
-        #python i2c here for detecting sensor triggers and giving acks back for turning on lights, trigger sound
-
-       
+        #python i2c here for detecting sensor triggers and giving acks back for turning on lights, trigger sound       
         if self.sent_active_panel == False:
             if self.current_panel < 21:
                 try:
@@ -474,9 +476,7 @@ class RunningScreen(Screen):
                         if self.current_panel == 0:
                             #make sure we're starting a new array of timings
                             del timings[:]
-                            self.start_time = time.time()
-                            #os.system('mpg123 startuserrun.mp3 &')
-                        
+                            self.start_time = time.time()                        
                         #need to add here some kind of statement eventually that says it can only go to panel 20
                         if self.current_panel > 0:
                             self.footNum += 1
@@ -484,10 +484,6 @@ class RunningScreen(Screen):
                             elapsed = self.end_time - self.start_time
                             timings.append(round(elapsed, 2))
                             self.start_time = self.end_time
-                            #if self.current_panel == 2:
-                            #    os.system('mpg123 one.mp3 &')
-                            #if self.current_panel == 3:
-                            #    os.system('mpg123 two.mp3 &')
                             print ("current_panel is > 1")
                             if (self.footNum == 1):
                                 self.footMarkerStr = str(self.footNum) + ' foot'

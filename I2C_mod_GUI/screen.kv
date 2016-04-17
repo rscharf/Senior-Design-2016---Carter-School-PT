@@ -4,8 +4,8 @@
 <myListItemButton>:
     size: 400, 60
     font_size: 25
-    deselected_color: 1.875, 1.506, .2902, 2 #239,192,37,1
-    selected_color: 1.788, .13332, .8236, 2 #228,17,105,1
+    deselected_color: 1.875, 1.506, .2902, 2
+    selected_color: 1.788, .13332, .8236, 2
 
 <myVolSlider>:
     orientation: 'vertical'
@@ -48,6 +48,8 @@ ScreenManagement:
         user_save: startrun.sel_usr
     DataSavedScreen:
     ExportDataScreen:
+    ConfirmDeleteDataScreen:
+        usr_name: deleteprofile.sel_usr
 
 <HomeScreen>:
     name: 'home'
@@ -140,7 +142,7 @@ ScreenManagement:
                 root.backButt()
 
         Label:
-            text: '1. Ensure silver flash drive is inserted into the indicated slot\n2. Press export data button\n3. Remove flash drive from slot when indicated safe\n4. Insert into personal computer\n5. Find file titled "SensoryWalk.xlsx"'
+            text: '1. Ensure silver flash drive is inserted into the indicated slot\n2. Press export data button\n3. Remove flash drive from slot when indicated safe\n4. Insert into personal computer\n5. Find file titled "SensoryWalk-MM-DD-YYYY--hh-mm.xlsx"'
             font_size: 25
             pos_hint: {'x': 0, 'center_y': .6}
 
@@ -274,19 +276,15 @@ ScreenManagement:
 
         Spinner:
             id: langspin
-            text: 'Select Language'
+            text: 'English'
             values: ('English', 'Cape Verdean Creole', 'French/Haitian Creole', 'Cantonese (Male)', 'Cantonese (Female)',  'Italian', 'Spanish')
             size_hint: .26, .085
             pos_hint: {'x': .23, 'y': .33}
 
         myVolSlider:
             id: vslide
-            #orientation: 'vertical'
-            #min: 0
-            #max: 100
             pos_hint: {'x': .6, 'y': .3}
             size_hint: .1, .43
-            #step: 1
 
         Label:
             text: 'Volume:'
@@ -471,13 +469,9 @@ ScreenManagement:
 
         myVolSlider:
             id: vslide
-            #orientation: 'vertical'
             value: root.edit_vol
-            #min: 0
-            #max: 100
             pos_hint: {'x': .6, 'y': .3}
             size_hint: .1, .43
-            #step: 1
 
         Label:
             text: 'Volume:'
@@ -604,19 +598,49 @@ ScreenManagement:
 
     FloatLayout:
         Label:
-            text: 'Profile for'
+            text: 'Profile for ' + root.usr_del
             font_size: 35
             pos_hint: {'center_x': .5, 'y': .26}
 
         Label:
-            text: root.usr_del
-            font_size: 45
-            pos_hint: {'center_x': .5, 'y': .1}
+            text: 'has been deleted'
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': .15}
+
+        Label:
+            text: 'Would you like to delete data for ' + root.usr_del + '?'
+            font_size: 30
+            pos_hint: {'center_x': .5, 'y': -.15}
+
+        Button:
+            text: 'Yes'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .25, 'y': .05}
+            on_press:
+                app.root.current = 'confirmdeletedata'
+                root.deleteData()
+
+        Button:
+            text: 'No'
+            font_size: 28
+            size_hint: .15, .12
+            pos_hint: {'center_x': .75, 'y': .05}
+            on_press: app.root.current = 'home'
+
+<ConfirmDeleteDataScreen>:
+    name: 'confirmdeletedata'
+
+    FloatLayout:
+        Label:
+            text: 'Excel data for ' + root.usr_name
+            font_size: 35
+            pos_hint: {'center_x': .5, 'y': .11}
 
         Label:
             text: 'has been deleted'
             font_size: 35
-            pos_hint: {'center_x': .5, 'y': -.06}
+            pos_hint: {'center_x': .5, 'y': 0}
 
         Button:
             text: 'Return Home'

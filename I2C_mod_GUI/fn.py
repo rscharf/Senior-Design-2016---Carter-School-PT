@@ -7,7 +7,6 @@ import os.path
 import time
 
 FILE = "SensoryWalk.xlsx"
-#timings = []
 numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
 
 def reload_dictionary(user_dict):
@@ -32,7 +31,6 @@ def changeRange(value, leftMin, leftMax, rightMin, rightMax):
     return rightMin + (valueScaled * rightSpan)
 
 def toPlay(currentPanel, language):
-    #os.system('mpg123 one.mp3 &')
     if language == 'English':
         if currentPanel == 0:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/English/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/English/zero.mp3 &'
@@ -88,7 +86,6 @@ def excelDataSave(USR, timings):
                 sheet_exists = True
 
         if sheet_exists:
-            #print(str(to_edit.dimensions))
             temp = str(to_edit.dimensions)
             last_row = int(temp.split("X", 1)[1])
             next_row = last_row + 1
@@ -237,6 +234,25 @@ def excelDataSave(USR, timings):
             tem.value = j
             iterator += 1
 
-
     wb.save(FILE)
+
+def excelDeleteSheet(USR):
+    sheet_exists = False
+    to_delete = None
+
+    if os.path.isfile(FILE):
+        wb = load_workbook(FILE)
+
+        for sh in wb:
+            if sh.title == USR:
+                to_delete=sh
+                sheet_exists = True
+
+        if sheet_exists:
+            wb.remove_sheet(to_delete)
+
+        wb.save(FILE)
+
+
+
 
