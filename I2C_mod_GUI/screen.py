@@ -325,7 +325,10 @@ class PanelReplacementScreen(Screen):
             if self.passinput.text == PASSWORD:
                 #python I2C code goes here to send actual address
                 #send MSP430 state var then send new address
-                self.panelToRep = int(self.spinner.text)
+                try:
+                    self.panelToRep = int(self.spinner.text)
+                except ValueError:
+                    self.result_string = 'Error: select a panel number'
                 bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, STATE_1)
                 bus.write_byte_data(BROADCAST_ADDR, DEVICE_REG_MODE1, new_addr[self.panelToRep])
                     
