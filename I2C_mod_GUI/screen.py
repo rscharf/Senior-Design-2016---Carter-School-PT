@@ -26,7 +26,7 @@ BROADCAST_ADDR = 0x7F
 DEVICE_REG_MODE1 = 0X00
 new_addr = [0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24]
 timings = []
-FILE = "SensoryWalk.xlsx"
+FILE = "/home/pi/newGUIwI2C/SensoryWalk.xlsx"
 STATE_0 = 0 #idle, lights and sensor off.  used to reset.
 STATE_1 = 1 #initialize, get new address, pass back
 STATE_2 = 2 #just listening on sensor
@@ -52,7 +52,7 @@ class myVolSlider(Slider):
             else:
                 volstr = "amixer sset 'PCM' " + str(new) + "%"
             os.system(volstr)
-            os.system('mpg123 bell.mp3 &')
+            os.system('mpg123 /home/pi/newGUIwI2C/bell.mp3 &')
 
         return released
 
@@ -176,10 +176,10 @@ class ProfileEditingScreen(Screen):
                 print "write error"
 
     def edit_profile(self):
-        f = open("profiles.txt", "r")
+        f = open("/home/pi/newGUIwI2C/profiles.txt", "r")
         lines = f.readlines()
         f.close()
-        f = open("profiles.txt", "w")
+        f = open("/home/pi/newGUIwI2C/profiles.txt", "w")
         for line in lines:
             if not self.usr_to_edit in line:
                 f.write(line)
@@ -235,10 +235,10 @@ class ConfirmDeleteScreen(Screen):
     usr_to_del = StringProperty()
 
     def deleteUser(self):
-        f = open("profiles.txt", "r")
+        f = open("/home/pi/newGUIwI2C/profiles.txt", "r")
         lines = f.readlines()
         f.close()
-        f = open("profiles.txt", "w")
+        f = open("/home/pi/newGUIwI2C/profiles.txt", "w")
         for line in lines:
             if not self.usr_to_del in line:
                 f.write(line)
@@ -292,7 +292,7 @@ class CreateProfileScreen(Screen):
             print('Brightness set to ' + str(self.brightslide.value))
             self.sel_usr = str(self.nameinput.text)
             self.yesnocr = 'has been created'
-            f = open("profiles.txt", "a")
+            f = open("/home/pi/newGUIwI2C/profiles.txt", "a")
             f.write(str(self.nameinput.text) + "," + str(self.spinner.text) + "," + str(self.volslide.value) + "," + str(self.brightslide.value) + "\n")
             f.close()
 
@@ -374,7 +374,7 @@ class ExportDataScreen(Screen):
 
     def exportButt(self):
         self.removestr = ''
-        os.system('sh export.sh')
+        os.system('sh /home/pi/newGUIwI2C/export.sh')
         self.removestr = 'Now safe to remove flash drive'
 
     def backButt(self):

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+cd /home/pi/newGUIwI2C
 while :
 do
 	sleep 1

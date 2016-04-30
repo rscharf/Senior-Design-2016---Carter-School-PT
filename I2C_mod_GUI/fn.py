@@ -66,6 +66,31 @@ def toPlay(currentPanel, language):
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Spanish (Dominican)':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish\ (Dominican)/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish\ (Dominican)/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Portuguese':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Portuguese/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Portuguese/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Greek':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Greek/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Greek/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Russian':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Russian/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Russian/' + numbers[currentPanel] + '.mp3 &'
+    elif language == 'Kazakh':
+        if currentPanel == 0:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Kazakh/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+        else:
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Kazakh/' + numbers[currentPanel] + '.mp3 &'
 
     return outStr
 
