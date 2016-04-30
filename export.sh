@@ -21,7 +21,7 @@ DIR="/mnt/excelusb/"
 FPATH=$DIR$NAME$NOW$EXT
 
 #then copy over the excel spreadsheet to the mount point
-cp SensoryWalk.xlsx $FPATH
+cp /home/pi/newGUIwI2C/SensoryWalk.xlsx $FPATH
 
 #then unmount the usb drive
 sudo umount /mnt/excelusb
