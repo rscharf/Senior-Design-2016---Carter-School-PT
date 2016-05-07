@@ -33,62 +33,62 @@ def changeRange(value, leftMin, leftMax, rightMin, rightMax):
 def toPlay(currentPanel, language):
     if language == 'English':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/English/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/English/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/English/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/English/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/English/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Cape Verdean Creole':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Cape\ Verdean\ Creole/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'French/Haitian Creole':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/French/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/French/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/French/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Cantonese (Male)':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseM/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseM/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseM/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Cantonese (Female)':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseF/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseF/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Cantonese/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/CantoneseF/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Italian':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Italian/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Italian/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Italian/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Italian/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Italian/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Spanish':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Spanish (Dominican)':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish\ (Dominican)/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish\ (Dominican)/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Spanish\ (Dominican)/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Portuguese':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Portuguese/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Portuguese/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Portuguese/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Greek':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Greek/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Greek/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Greek/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Russian':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Russian/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Russian/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Russian/' + numbers[currentPanel] + '.mp3 &'
     elif language == 'Kazakh':
         if currentPanel == 0:
-            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Kazakh/go.mp3 && sleep 1 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/zero.mp3 &'
+            outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Kazakh/zero.mp3 && sleep 0.5 &&  mpg123 /home/pi/newGUIwI2C/Audio/Spanish/go.mp3 &'
         else:
             outStr = 'mpg123 /home/pi/newGUIwI2C/Audio/Kazakh/' + numbers[currentPanel] + '.mp3 &'
 
